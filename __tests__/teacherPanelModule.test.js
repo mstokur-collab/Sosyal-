@@ -101,4 +101,82 @@ describe('teacherPanelModule.validateQuestions', () => {
     expect(result.validQuestions).toHaveLength(1);
     expect(result.warnings).toContain('Soru 1: Benzer bir soru zaten mevcut.');
   });
+
+  test("rejects fill-in question without placeholder or distractors", () => {
+    const result = teacherPanelModule.validateQuestions([
+      {
+        grade: 6,
+        topic: 'Cumhuriyet Tarihi',
+        difficulty: 'orta',
+        type: 'fill-in',
+        sentence: 'Türkiye Cumhuriyeti 1923 yılında ilan edildi.',
+        answer: '1923',
+        distractors: []
+      }
+    ]);
+
+    expect(result.errors).toContain("Soru 1: Cümle eksik veya '___' işareti yok.");
+    expect(result.errors).toContain('Soru 1: En az 1 çeldirici gerekli.');
+    expect(result.validQuestions).toHaveLength(0);
+  });
+
+  test('accepts valid fill-in question', () => {
+    const result = teacherPanelModule.validateQuestions([
+      {
+        grade: 6,
+        topic: 'Cumhuriyet Tarihi',
+        difficulty: 'kolay',
+        type: 'fill-in',
+        sentence: 'Türkiye\'nin başkenti ___.',
+        answer: 'Ankara',
+        distractors: ['İstanbul', 'İzmir']
+      }
+    ]);
+
+    expect(result.errors).toHaveLength(0);
+    expect(result.validQuestions).toHaveLength(1);
+    expect(result.validQuestions[0]).toMatchObject({ answer: 'Ankara', type: 'fill-in' });
+  });
+
+  test('rejects matching question with missing pair data', () => {
+    const result = teacherPanelModule.validateQuestions([
+      {
+        grade: 7,
+        topic: 'Türk-İslam Devletleri',
+        difficulty: 'zor',
+        type: 'matching',
+        question: 'Liderleri ve devletleri eşleştirin.',
+        pairs: [
+          { term: 'Satuk Buğra Han', definition: 'Karahanlı Devleti' },
+          { term: '', definition: 'Büyük Selçuklu Devleti' },
+          { term: 'Melikşah', definition: '' }
+        ]
+      }
+    ]);
+
+    expect(result.errors).toContain('Soru 1, Çift 2: Terim ve açıklama gerekli.');
+    expect(result.errors).toContain('Soru 1, Çift 3: Terim ve açıklama gerekli.');
+    expect(result.validQuestions).toHaveLength(0);
+  });
+
+  test('accepts valid matching question', () => {
+    const result = teacherPanelModule.validateQuestions([
+      {
+        grade: 7,
+        topic: 'İslam Tarihi',
+        difficulty: 'orta',
+        type: 'matching',
+        question: 'Kavramları tanımlarıyla eşleştirin.',
+        pairs: [
+          { term: 'Hicret', definition: 'Hz. Muhammed\'in Mekke\'den Medine\'ye göçü' },
+          { term: 'Bedir Savaşı', definition: '624 yılında yapılan ilk büyük savaş' },
+          { term: 'Hudeybiye Anlaşması', definition: '628 yılında yapılan barış anlaşması' }
+        ]
+      }
+    ]);
+
+    expect(result.errors).toHaveLength(0);
+    expect(result.validQuestions).toHaveLength(1);
+    expect(result.validQuestions[0]).toMatchObject({ type: 'matching', pairs: expect.any(Array) });
+  });
 });
