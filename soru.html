@@ -1,0 +1,3003 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sosyal Bilgiler Bilgi Yarışması</title>
+    <style>
+        /* CSS Kodları - Yeni stiller eklendi */
+        :root {
+            --bg-color: #f0f8ff;
+            --primary-color: #3B82F6;
+            --secondary-color: #fdfd96;
+            --accent-color: #ffb3ba;
+            --correct-color: #77dd77;
+            --incorrect-color: #ff6961;
+            --text-color: #333;
+            --border-radius: 15px;
+            --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --info-color: #06B6D4;
+            --modal-bg: rgba(0, 0, 0, 0.5);
+            --card-bg: white;
+            --border-color: #e1e5e9;
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --bg-color: #1a1a2e;
+            --primary-color: #4F46E5;
+            --secondary-color: #16213e;
+            --accent-color: #e94560;
+            --text-color: #f5f5f5;
+            --card-bg: #16213e;
+            --border-color: #0f3460;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            height: 95vh;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            /* YENİ: Başlangıçta gizli olabilir, JS ile gösterilecek */
+            display: none;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--box-shadow);
+            display: none;
+            z-index: 999;
+            min-width: 200px;
+        }
+
+        .settings-panel.active {
+            display: block;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .setting-item label {
+            font-weight: 600;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: var(--success-color);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 21px;
+            height: 21px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(25px);
+        }
+        
+        .screen {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+        
+        .screen.active {
+            display: flex;
+        }
+        
+        h1, h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 20px 30px;
+            font-size: 1.5em;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            background-color: #2563EB;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary { 
+            background-color: var(--accent-color); 
+        }
+        
+        .btn-secondary:hover { 
+            background-color: #fa9aa1; 
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background-color: #059669;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+        }
+        
+        .btn-warning:hover {
+            background-color: #D97706;
+        }
+        
+        .btn-back {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            font-size: 1em;
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        /* Player Name Input */
+        .player-name-container {
+            margin-bottom: 30px;
+        }
+
+        .player-name-input {
+            padding: 15px;
+            font-size: 1.2em;
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            background: var(--card-bg);
+            color: var(--text-color);
+            text-align: center;
+            min-width: 300px;
+        }
+
+        /* Game Navigation */
+        .game-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Timer */
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .timer {
+            background: linear-gradient(135deg, var(--warning-color), #F97316);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: var(--box-shadow);
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .timer.warning {
+            animation: pulse 1s infinite;
+            background: linear-gradient(135deg, var(--incorrect-color), #DC2626);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Jokers */
+        .jokers-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .joker-btn {
+            background: linear-gradient(135deg, var(--info-color), #0891B2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: var(--box-shadow);
+        }
+
+        .joker-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(8, 145, 178, 0.3);
+        }
+
+        .joker-btn:disabled {
+            background: #9CA3AF;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background: var(--border-color);
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-color), var(--primary-color));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        /* Game styles */
+        #game-area {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        #question-container {
+            font-size: 1.8em;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            min-height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.4;
+        }
+        
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            flex-grow: 1;
+        }
+        
+        #quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .option-btn {
+            font-size: 1.3em;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .option-btn.correct { 
+            background-color: var(--correct-color);
+            animation: correctPulse 0.6s ease;
+        }
+        
+        .option-btn.incorrect { 
+            background-color: var(--incorrect-color);
+            animation: shake 0.5s ease;
+        }
+
+        .option-btn.hidden {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        #score-board {
+            margin-top: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary-color);
+            min-height: 30px;
+        }
+        
+        /* Matching game styles */
+        #matching-game-container { 
+            display: flex; 
+            justify-content: space-around; 
+            width: 100%; 
+            gap: 20px; 
+        }
+        
+        .matching-column { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            width: 45%; 
+        }
+        
+        .match-item {
+            padding: 15px;
+            border: 2px solid var(--primary-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            font-size: 1.1em;
+            background: var(--card-bg);
+        }
+        
+        .match-item:hover { 
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .match-item.selected { 
+            background-color: var(--accent-color); 
+            color: white; 
+        }
+        
+        .match-item.matched { 
+            background-color: var(--correct-color); 
+            border-color: var(--correct-color); 
+            cursor: default; 
+            opacity: 0.7; 
+        }
+        
+        #fill-in-words { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 15px; 
+            justify-content: center; 
+            margin-top: 20px; 
+        }
+
+        .draggable-word {
+            padding: 12px 20px;
+            font-size: 1.2em;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px;
+            cursor: grab;
+            transition: transform 0.2s, opacity 0.2s, background-color 0.2s;
+            user-select: none;
+        }
+
+        .draggable-word:active {
+            cursor: grabbing;
+        }
+
+        .draggable-word.dragging {
+            opacity: 0.5;
+            transform: scale(1.05);
+        }
+        
+        .draggable-word.incorrect {
+            background-color: var(--incorrect-color);
+            animation: shake 0.5s ease;
+        }
+
+        .drop-target {
+            display: inline-block;
+            min-width: 150px;
+            padding: 10px 14px;
+            border: 2px dashed var(--primary-color);
+            border-radius: 10px;
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--primary-color);
+            font-weight: bold;
+            text-align: center;
+            vertical-align: middle;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .drop-target.drag-over {
+            background-color: rgba(59, 130, 246, 0.25);
+        }
+
+        .drop-target.correct {
+            border-style: solid;
+            border-color: var(--correct-color);
+            background-color: var(--correct-color);
+            color: white;
+            animation: correctPulse 0.6s ease;
+        }
+
+        .drop-target.incorrect {
+            border-color: var(--incorrect-color);
+            animation: shake 0.5s ease;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .modal-btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .modal-btn-secondary {
+            background: var(--border-color);
+            color: var(--text-color);
+        }
+
+        /* High Scores */
+        .high-scores-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: var(--secondary-color);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .score-rank {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary-color);
+            min-width: 40px;
+        }
+
+        .score-details {
+            flex-grow: 1;
+            text-align: left;
+            margin-left: 15px;
+        }
+
+        .score-name {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .score-date {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+
+        .score-points {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--success-color);
+        }
+
+        /* Teacher Panel Styles */
+        #teacher-panel-screen { 
+            justify-content: flex-start; 
+            align-items: stretch;
+        }
+        
+        .teacher-panel-content { 
+            display: flex; 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+        }
+        
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            border-right: 1px solid var(--border-color);
+        }
+        
+        .tab-button:last-child {
+            border-right: none;
+        }
+        
+        .tab-button.active {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+        }
+        
+        .tab-button:hover:not(.active) {
+            background-color: var(--border-color);
+            color: var(--primary-color);
+        }
+        
+        .tab-content {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            background-color: var(--card-bg);
+        }
+        
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Search and Filter */
+        .search-filter-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .filter-select {
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1em;
+            min-width: 120px;
+        }
+        
+        /* Individual Question Form */
+        .form-section { 
+            width: 100%;
+            overflow-y: auto; 
+        }
+        
+        #teacher-panel-form { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+        }
+        
+        #teacher-panel-form label { 
+            text-align: left; 
+            font-weight: bold; 
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+        
+        #teacher-panel-form input, 
+        #teacher-panel-form select, 
+        #teacher-panel-form textarea { 
+            width: 100%; 
+            padding: 12px; 
+            font-size: 1em; 
+            border-radius: 8px; 
+            border: 2px solid var(--border-color); 
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+        
+        #teacher-panel-form input:focus,
+        #teacher-panel-form select:focus,
+        #teacher-panel-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        #teacher-panel-form textarea { 
+            min-height: 80px; 
+            resize: vertical; 
+        }
+
+        /* Topic Datalist Styling */
+        #topic-input {
+            position: relative;
+        }
+
+        /* Bulk Import Styles */
+        .bulk-import-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .import-section {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .import-textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            resize: vertical;
+            background-color: var(--secondary-color);
+            transition: border-color 0.3s;
+            color: var(--text-color);
+        }
+        
+        .import-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: var(--card-bg);
+        }
+        
+        .import-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .import-btn {
+            padding: 12px 24px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .sample-json {
+            background-color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            white-space: pre;
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            color: var(--text-color);
+        }
+        
+        .alert {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .alert-success {
+            background-color: #d1eddf;
+            border: 1px solid #badbcc;
+            color: #155724;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .alert-info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        /* Question Management Styles */
+        .list-section { 
+            width: 100%; 
+            overflow-y: auto; 
+        }
+        
+        #question-list-container .question-item {
+            background: linear-gradient(135deg, var(--card-bg) 0%, var(--secondary-color) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        #question-list-container .question-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        #question-list-container .question-details {
+            font-size: 0.95em;
+            flex-grow: 1;
+            line-height: 1.5;
+        }
+        
+        #question-list-container .question-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        #question-list-container .edit-btn {
+            background-color: var(--warning-color);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        #question-list-container .edit-btn:hover {
+            background-color: #D97706;
+            transform: scale(1.05);
+        }
+        
+        #question-list-container .delete-btn {
+            background-color: var(--incorrect-color);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        #question-list-container .delete-btn:hover {
+            background-color: #dc3545;
+            transform: scale(1.05);
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2563EB 100%);
+            color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 98%;
+                height: 98vh;
+                padding: 10px;
+            }
+            
+            .btn {
+                font-size: 1.2em;
+                padding: 15px 20px;
+            }
+            
+            .button-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .tab-navigation {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            .tab-button:last-child {
+                border-bottom: none;
+            }
+            
+            #question-container {
+                font-size: 1.4em;
+                padding: 15px;
+                line-height: 1.5; 
+            }
+            
+            .import-buttons {
+                flex-direction: column;
+            }
+
+            .search-filter-container {
+                flex-direction: column;
+            }
+
+            .jokers-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .game-navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2em;
+            }
+
+            .settings-panel {
+                top: 60px;
+                right: 10px;
+                left: 10px;
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Theme Toggle Button -->
+        <button class="theme-toggle" onclick="uiModule.toggleTheme()" title="Tema Değiştir">🌙</button>
+        
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settings-panel">
+            <h4>⚙️ Ayarlar</h4>
+            <div class="setting-item">
+                <label>Ses Efektleri</label>
+                <div class="toggle-switch" id="sound-toggle" onclick="uiModule.toggleSound()"></div>
+            </div>
+            <div class="setting-item">
+                <label>Zamanlayıcı</label>
+                <div class="toggle-switch active" id="timer-toggle" onclick="uiModule.toggleTimer()"></div>
+            </div>
+        </div>
+
+        <!-- Ana Menü -->
+        <div id="start-screen" class="screen active">
+            <h1>🏛️ Sosyal Bilgiler Bilgi Yarışması</h1>
+            <div class="button-grid">
+                <button class="btn" onclick="uiModule.showScreen('player-name-screen')">🎮 Oyuna Başla</button>
+                <button class="btn btn-secondary" onclick="uiModule.showScreen('high-scores-screen')">🏆 Yüksek Skorlar</button>
+                <button class="btn btn-secondary" onclick="uiModule.showScreen('teacher-panel-screen')">👩‍🏫 Öğretmen Paneli</button>
+                <button id="settings-button" class="btn btn-warning" onclick="uiModule.toggleSettings()" style="font-size: 1.2em;">⚙️ Ayarlar</button>
+            </div>
+        </div>
+
+        <!-- Player Name Screen -->
+        <div id="player-name-screen" class="screen">
+            <button class="btn btn-back" onclick="uiModule.showScreen('start-screen')">← Geri</button>
+            <h2>👤 Oyuncu Adınızı Girin</h2>
+            <div class="player-name-container">
+                <input type="text" id="player-name-input" class="player-name-input" placeholder="Adınızı yazın..." maxlength="20">
+            </div>
+            <button class="btn" onclick="gameModule.setPlayerName()">Devam Et →</button>
+        </div>
+
+        <!-- High Scores Screen -->
+        <div id="high-scores-screen" class="screen">
+            <button class="btn btn-back" onclick="uiModule.showScreen('start-screen')">← Geri</button>
+            <h2>🏆 Yüksek Skorlar</h2>
+            <div class="high-scores-list" id="high-scores-list">
+                <!-- High scores will be loaded here -->
+            </div>
+            <button class="btn btn-warning" onclick="uiModule.confirmClearHighScores()">🗑️ Skorları Temizle</button>
+        </div>
+
+        <!-- Diğer oyun ekranları -->
+        <div id="grade-select-screen" class="screen">
+            <button class="btn btn-back" onclick="uiModule.showScreen('player-name-screen')">← Geri</button>
+            <h2>📚 Sınıfınızı Seçin</h2>
+            <div class="button-grid">
+                <button class="btn" onclick="gameModule.selectGrade(6)">6. Sınıf</button>
+                <button class="btn" onclick="gameModule.selectGrade(7)">7. Sınıf</button>
+            </div>
+        </div>
+        
+        <div id="topic-select-screen" class="screen">
+            <button class="btn btn-back" onclick="uiModule.showScreen('grade-select-screen')">← Geri</button>
+            <h2>📖 Konu Seçin</h2>
+            <div id="topic-buttons" class="button-grid"></div>
+        </div>
+        
+        <div id="competition-mode-screen" class="screen">
+            <button class="btn btn-back" onclick="uiModule.showScreen('topic-select-screen')">← Geri</button>
+            <h2>🏆 Yarışma Türünü Seçin</h2>
+            <div class="button-grid">
+                <button class="btn" onclick="gameModule.selectCompetitionMode('bireysel')">🙋‍♂️ Bireysel Yarışma</button>
+                <button class="btn" onclick="gameModule.selectCompetitionMode('grup')">👥 Grup Yarışması</button>
+            </div>
+        </div>
+        
+        <div id="difficulty-select-screen" class="screen">
+            <button class="btn btn-back" onclick="uiModule.showScreen('competition-mode-screen')">← Geri</button>
+            <h2>⚡ Zorluk Seviyesini Seçin</h2>
+            <div class="button-grid">
+                <button class="btn" onclick="gameModule.selectDifficulty('kolay')">😊 Kolay</button>
+                <button class="btn" onclick="gameModule.selectDifficulty('orta')">🤔 Orta</button>
+                <button class="btn" onclick="gameModule.selectDifficulty('zor')">😤 Zor</button>
+            </div>
+        </div>
+        
+        <div id="game-mode-screen" class="screen">
+            <button class="btn btn-back" onclick="uiModule.showScreen('difficulty-select-screen')">← Geri</button>
+            <h2>🎯 Oyun Türünü Seçin</h2>
+            <div class="button-grid">
+                <button class="btn" onclick="gameModule.startGame('quiz')">✅ Çoktan Seçmeli</button>
+                <button class="btn" onclick="gameModule.startGame('fill-in')">📝 Boşluk Doldurma</button>
+                <button class="btn" onclick="gameModule.startGame('matching')">🔗 Eşleştirme</button>
+            </div>
+        </div>
+        
+        <div id="game-screen" class="screen">
+            <div id="game-area">
+                <!-- Game Navigation -->
+                <div class="game-navigation">
+                    <button class="nav-btn btn-secondary" id="prev-question-btn" onclick="gameModule.goToPreviousQuestion()">← Önceki</button>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                    <button class="nav-btn btn-secondary" id="next-question-btn" onclick="gameModule.goToNextQuestion()">Sonraki →</button>
+                </div>
+
+                <!-- Timer -->
+                <div class="timer-container" id="timer-container">
+                    <div class="timer" id="timer">30</div>
+                </div>
+
+                <!-- Jokers -->
+                <div class="jokers-container" id="jokers-container">
+                    <button class="joker-btn" id="fifty-fifty-joker" onclick="gameModule.useFiftyFiftyJoker()">🎯 %50</button>
+                    <button class="joker-btn" id="skip-joker" onclick="gameModule.useSkipJoker()">⏭️ Atla</button>
+                    <button class="joker-btn" id="time-joker" onclick="gameModule.useTimeJoker()">⏰ +15sn</button>
+                </div>
+
+                <div id="score-board">Skor: 0</div>
+                <div id="question-container"></div>
+                <div id="options-container"></div>
+                
+                <!-- Finish Game Button -->
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-warning" onclick="gameModule.finishGame()">🏁 Yarışmayı Bitir</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="end-screen" class="screen">
+            <h2>🎉 Oyun Bitti!</h2>
+            <div id="final-score" style="font-size: 2em; margin: 20px 0; line-height: 1.5;"></div>
+            <div class="button-grid">
+                <button class="btn" onclick="gameModule.resetAndGoToStart()">🏠 Ana Menü</button>
+                <button class="btn btn-secondary" onclick="uiModule.showScreen('high-scores-screen')">🏆 Yüksek Skorlar</button>
+            </div>
+        </div>
+
+        <!-- Modal for confirmations -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <h3 id="modal-title">Onay</h3>
+                <p id="modal-message">Bu işlemi yapmak istediğinizden emin misiniz?</p>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-btn-primary" id="modal-confirm">Evet</button>
+                    <button class="modal-btn modal-btn-secondary" id="modal-cancel" onclick="uiModule.hideModal()">Hayır</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Öğretmen Paneli (Yenilenmiş Tasarım) -->
+        <div id="teacher-panel-screen" class="screen">
+            <button class="btn btn-back" onclick="uiModule.showScreen('start-screen')">← Geri</button>
+            <h2>👩‍🏫 Öğretmen Paneli</h2>
+            
+            <!-- Tab Navigation -->
+            <div class="tab-navigation">
+                <button class="tab-button active" onclick="teacherPanelModule.switchTab('individual-tab')">➕ Tekil Soru Ekle</button>
+                <button class="tab-button" onclick="teacherPanelModule.switchTab('bulk-tab')">📂 Toplu Soru Ekle</button>
+                <button class="tab-button" onclick="teacherPanelModule.switchTab('manage-tab')">📊 Soru Yönetimi</button>
+            </div>
+
+            <!-- Individual Question Tab -->
+            <div id="individual-tab" class="tab-content active">
+                <div class="form-section">
+                    <form id="teacher-panel-form" onsubmit="teacherPanelModule.saveQuestion(event)">
+                        <label for="grade">🎓 Sınıf:</label>
+                        <select id="grade" name="grade" required>
+                            <option value="6">6. Sınıf</option>
+                            <option value="7">7. Sınıf</option>
+                        </select>
+                        
+                        <label for="topic">📚 Konu (Ünite):</label>
+                        <input type="text" id="topic" name="topic" list="topics-datalist" placeholder="Örn: İpek Yolu'nda Türkler" required>
+                        <datalist id="topics-datalist">
+                            <!-- Topics will be populated dynamically -->
+                        </datalist>
+                        
+                        <label for="difficulty">⚡ Zorluk:</label>
+                        <select id="difficulty" name="difficulty" required>
+                            <option value="kolay">Kolay</option>
+                            <option value="orta">Orta</option>
+                            <option value="zor">Zor</option>
+                        </select>
+                        
+                        <label for="type">🎯 Soru Tipi:</label>
+                        <select id="type" name="type" onchange="teacherPanelModule.toggleQuestionTypeFields()" required>
+                            <option value="quiz">Çoktan Seçmeli</option>
+                            <option value="fill-in">Boşluk Doldurma</option>
+                            <option value="matching">Eşleştirme</option>
+                        </select>
+                        
+                        <div id="quiz-fields">
+                            <label for="question">❓ Soru:</label>
+                            <textarea id="question" name="question" placeholder="Soru metni..."></textarea>
+                            
+                            <label>📝 Seçenekler (Doğru cevabı ilk sıraya yazın):</label>
+                            <input type="text" id="option1" name="option1" placeholder="A) Doğru Cevap">
+                            <input type="text" id="option2" name="option2" placeholder="B) Yanlış Cevap 1">
+                            <input type="text" id="option3" name="option3" placeholder="C) Yanlış Cevap 2">
+                            <input type="text" id="option4" name="option4" placeholder="D) Yanlış Cevap 3">
+                        </div>
+                        
+                        <div id="fill-in-fields" style="display:none;">
+                            <label for="fill-in-sentence">📝 Cümle (___ kullanın):</label>
+                            <input type="text" id="fill-in-sentence" name="fill-in-sentence" placeholder="İstanbul, ___ tarafından fethedilmiştir.">
+                            
+                            <label for="fill-in-answer">✅ Doğru Kelime:</label>
+                            <input type="text" id="fill-in-answer" name="fill-in-answer" placeholder="Fatih Sultan Mehmet">
+                            
+                            <label for="fill-in-distractors">❌ Çeldiriciler (virgülle ayırın):</label>
+                            <input type="text" id="fill-in-distractors" name="fill-in-distractors" placeholder="Kanuni,Yavuz">
+                        </div>
+                        
+                        <div id="matching-fields" style="display:none;">
+                            <label>🔗 Eşleştirme Çiftleri (3-5 çift):</label>
+                            <div id="matching-pairs-container"></div>
+                            <button type="button" class="btn btn-secondary" onclick="teacherPanelModule.addMatchingPairField()" style="font-size: 1em; padding: 10px; margin: 10px 0;">+ Yeni Çift Ekle</button>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success" id="form-submit-btn" style="margin-top: 20px; padding: 15px; font-size: 1.2em;">💾 Soruyu Kaydet</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bulk Import Tab -->
+            <div id="bulk-tab" class="tab-content">
+                <div class="bulk-import-container">
+                    <div class="import-section">
+                        <h3>📂 Toplu Soru İçe Aktarımı</h3>
+                        <p>JSON formatında birden fazla soru ekleyebilirsiniz. Aşağıdaki örnek formatı kullanın:</p>
+                        
+                        <div class="sample-json">[
+  {
+    "grade": 6,
+    "topic": "İlk Türk Devletleri",
+    "difficulty": "kolay",
+    "type": "quiz",
+    "question": "Orta Asya'da kurulan ilk Türk devleti hangisidir?",
+    "options": ["Asya Hun Devleti", "Göktürkler", "Uygurlar", "Karahanlılar"],
+    "answer": "Asya Hun Devleti"
+  },
+  {
+    "grade": 7,
+    "topic": "Osmanlı Devleti",
+    "difficulty": "orta", 
+    "type": "fill-in",
+    "sentence": "Osmanlı Devleti ___ yılında kurulmuştur.",
+    "answer": "1299",
+    "distractors": ["1300", "1298", "1301"]
+  },
+  {
+    "grade": 6,
+    "topic": "İlk Türk Devletleri",
+    "difficulty": "zor",
+    "type": "matching",
+    "question": "Liderleri ve devletlerini eşleştirin.",
+    "pairs": [
+      {"term": "Bumin Kağan", "definition": "Göktürk Devleti"},
+      {"term": "Teoman", "definition": "Asya Hun Devleti"},
+      {"term": "Kutluk Bilge Kül Kağan", "definition": "Uygur Devleti"}
+    ]
+  }
+]</div>
+                        
+                        <textarea id="bulk-import-textarea" class="import-textarea" placeholder="JSON formatındaki sorularınızı buraya yapıştırın..."></textarea>
+                        
+                        <div class="import-buttons">
+                            <button class="import-btn btn-success" onclick="teacherPanelModule.validateBulkImport()">🔍 Doğrula ve Önizle</button>
+                            <button class="import-btn btn-warning" onclick="teacherPanelModule.loadSampleData()">📋 Örnek Veriyi Yükle</button>
+                            <button class="import-btn btn" onclick="teacherPanelModule.clearImportData()">🗑️ Temizle</button>
+                        </div>
+                        
+                        <div id="import-messages"></div>
+                        <div id="import-preview"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question Management Tab -->
+            <div id="manage-tab" class="tab-content">
+                <div class="list-section">
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-questions">0</div>
+                            <div class="stat-label">Toplam Soru</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-topics">0</div>
+                            <div class="stat-label">Farklı Konu</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="grade6-questions">0</div>
+                            <div class="stat-label">6. Sınıf Soruları</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="grade7-questions">0</div>
+                            <div class="stat-label">7. Sınıf Soruları</div>
+                        </div>
+                    </div>
+
+                    <!-- Search and Filter -->
+                    <div class="search-filter-container">
+                        <input type="search" id="question-search" class="search-input" placeholder="🔍 Soru ara..." oninput="teacherPanelModule.filterQuestions()">
+                        <select id="grade-filter" class="filter-select" onchange="teacherPanelModule.filterQuestions()">
+                            <option value="">Tüm Sınıflar</option>
+                            <option value="6">6. Sınıf</option>
+                            <option value="7">7. Sınıf</option>
+                        </select>
+                        <select id="difficulty-filter" class="filter-select" onchange="teacherPanelModule.filterQuestions()">
+                            <option value="">Tüm Zorluklar</option>
+                            <option value="kolay">Kolay</option>
+                            <option value="orta">Orta</option>
+                            <option value="zor">Zor</option>
+                        </select>
+                        <select id="type-filter" class="filter-select" onchange="teacherPanelModule.filterQuestions()">
+                            <option value="">Tüm Tipler</option>
+                            <option value="quiz">Çoktan Seçmeli</option>
+                            <option value="fill-in">Boşluk Doldurma</option>
+                            <option value="matching">Eşleştirme</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                        <button class="btn btn-warning" onclick="teacherPanelModule.exportAllQuestions()">📤 Soruları Dışa Aktar</button>
+                        <button class="btn btn-secondary" onclick="teacherPanelModule.confirmDeleteAllQuestions()">🗑️ Tüm Soruları Sil</button>
+                    </div>
+                    
+                    <h3>📋 Mevcut Sorular</h3>
+                    <div id="question-list-container">
+                        <!-- Sorular buraya JS ile yüklenecek -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    /* ===== MODULAR JAVASCRIPT STRUCTURE ===== */
+    
+    // Global State Management
+    const state = {
+        // Game state
+        currentScreen: 'start-screen',
+        playerName: '',
+        currentGameSettings: {},
+        gameQuestions: [],
+        currentQuestionIndex: 0,
+        score: { bireysel: 0, grup1: 0, grup2: 0 },
+        currentPlayer: 'bireysel',
+        selectedMatchItem: null,
+        matchedCount: 0,
+        answeredQuestions: new Set(),
+        
+        // Timer state
+        timeLeft: 30,
+        timerInterval: null,
+        timerEnabled: true,
+        
+        // Jokers state
+        jokersUsed: {
+            fiftyFifty: false,
+            skip: false,
+            time: false
+        },
+        
+        // UI state
+        theme: 'light',
+        soundEnabled: true,
+        
+        // Teacher panel state
+        editingQuestionId: null,
+        filteredQuestions: [],
+        
+        // Settings
+        timeLimits: {
+            kolay: 45,
+            orta: 30,
+            zor: 20
+        }
+    };
+
+    // Initial Questions Data
+    let initialQuestions = [
+        { 
+            id: 1663000000001, 
+            grade: 6, 
+            topic: "İlk Türk Devletleri", 
+            difficulty: "kolay", 
+            type: "quiz", 
+            question: "Orta Asya'da kurulan ilk Türk devleti hangisidir?", 
+            options: ["Asya Hun Devleti", "Göktürkler", "Uygurlar", "Karahanlılar"], 
+            answer: "Asya Hun Devleti" 
+        },
+        { 
+            id: 1663000000002, 
+            grade: 7, 
+            topic: "Osmanlı Devleti'nin Kuruluşu", 
+            difficulty: "orta", 
+            type: "fill-in", 
+            sentence: "Osmanlı Devleti'nin Rumeli'deki ilk toprağı ___ Kalesi'dir.", 
+            answer: "Çimpe", 
+            distractors: ["Gelibolu", "Edirne", "Bursa"] 
+        },
+        { 
+            id: 1663000000003, 
+            grade: 6, 
+            topic: "İlk Türk Devletleri", 
+            difficulty: "zor", 
+            type: "matching", 
+            question: "Liderleri ve devletlerini eşleştirin.", 
+            pairs: [
+                {term: "Bumin Kağan", definition: "Göktürk Devleti"}, 
+                {term: "Teoman", definition: "Asya Hun Devleti"}, 
+                {term: "Kutluk Bilge Kül Kağan", definition: "Uygur Devleti"}
+            ] 
+        },
+    ];
+
+    let allQuestions = [];
+
+    /* ===== STORAGE MODULE ===== */
+    const storageModule = {
+        // Load questions from localStorage
+        loadQuestions() {
+            const storedQuestions = localStorage.getItem('socialStudiesGameQuestions');
+            try {
+                allQuestions = storedQuestions ? JSON.parse(storedQuestions) : [...initialQuestions];
+                if (!Array.isArray(allQuestions) || allQuestions.length === 0) throw new Error();
+            } catch (e) {
+                allQuestions = [...initialQuestions];
+            }
+        },
+        
+        // Save questions to localStorage
+        saveQuestions() {
+            localStorage.setItem('socialStudiesGameQuestions', JSON.stringify(allQuestions));
+        },
+        
+        // Load high scores
+        loadHighScores() {
+            const scores = localStorage.getItem('socialStudiesHighScores');
+            try {
+                return scores ? JSON.parse(scores) : [];
+            } catch (e) {
+                return [];
+            }
+        },
+        
+        // Save high score
+        saveHighScore(playerName, score, settings) {
+            const highScores = this.loadHighScores();
+            const newScore = {
+                name: playerName,
+                score: score,
+                date: new Date().toLocaleDateString('tr-TR'),
+                settings: settings
+            };
+            
+            highScores.push(newScore);
+            highScores.sort((a, b) => b.score - a.score);
+            
+            // Keep only top 10 scores
+            if (highScores.length > 10) {
+                highScores.splice(10);
+            }
+            
+            localStorage.setItem('socialStudiesHighScores', JSON.stringify(highScores));
+        },
+        
+        // Clear high scores
+        clearHighScores() {
+            localStorage.removeItem('socialStudiesHighScores');
+        },
+        
+        // Load settings
+        loadSettings() {
+            const settings = localStorage.getItem('socialStudiesSettings');
+            try {
+                const parsed = settings ? JSON.parse(settings) : {};
+                state.theme = parsed.theme || 'light';
+                state.soundEnabled = parsed.soundEnabled !== false; // Default true
+                state.timerEnabled = parsed.timerEnabled !== false; // Default true
+            } catch (e) {
+                // Use defaults
+            }
+        },
+        
+        // Save settings
+        saveSettings() {
+            const settings = {
+                theme: state.theme,
+                soundEnabled: state.soundEnabled,
+                timerEnabled: state.timerEnabled
+            };
+            localStorage.setItem('socialStudiesSettings', JSON.stringify(settings));
+        }
+    };
+
+    /* ===== UI MODULE ===== */
+    const uiModule = {
+        // Show specific screen
+        showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+            const activeScreen = document.getElementById(screenId);
+            if (activeScreen) {
+                activeScreen.classList.add('active');
+                state.currentScreen = screenId;
+                
+                // YENİ: Tema değiştirme butonunu sadece ana ekranda göster
+                const themeToggleButton = document.querySelector('.theme-toggle');
+                if (themeToggleButton) {
+                    if (screenId === 'start-screen') {
+                        themeToggleButton.style.display = 'block';
+                    } else {
+                        themeToggleButton.style.display = 'none';
+                    }
+                }
+                
+                // Screen-specific actions
+                if (screenId === 'teacher-panel-screen') {
+                    teacherPanelModule.displayAllQuestionsForManagement();
+                    teacherPanelModule.updateStatistics();
+                } else if (screenId === 'high-scores-screen') {
+                    this.displayHighScores();
+                }
+            }
+        },
+        
+        // Toggle theme
+        toggleTheme() {
+            state.theme = state.theme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', state.theme);
+            
+            const themeButton = document.querySelector('.theme-toggle');
+            themeButton.textContent = state.theme === 'light' ? '🌙' : '☀️';
+            
+            storageModule.saveSettings();
+        },
+        
+        // Toggle settings panel
+        toggleSettings() {
+            const panel = document.getElementById('settings-panel');
+            panel.classList.toggle('active');
+        },
+        
+        // Toggle sound
+        toggleSound() {
+            state.soundEnabled = !state.soundEnabled;
+            const toggle = document.getElementById('sound-toggle');
+            toggle.classList.toggle('active', state.soundEnabled);
+            storageModule.saveSettings();
+        },
+        
+        // Toggle timer
+        toggleTimer() {
+            state.timerEnabled = !state.timerEnabled;
+            const toggle = document.getElementById('timer-toggle');
+            toggle.classList.toggle('active', state.timerEnabled);
+            
+            const timerContainer = document.getElementById('timer-container');
+            if (timerContainer) {
+                 timerContainer.style.display = state.timerEnabled ? 'flex' : 'none';
+            }
+           
+            storageModule.saveSettings();
+        },
+        
+        // Play sound effect
+        playSound(type) {
+            if (!state.soundEnabled) return;
+            
+            // Create audio context for sound effects
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Different sounds for different events
+            switch(type) {
+                case 'correct':
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                    oscillator.frequency.linearRampToValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+                    break;
+                case 'incorrect':
+                    oscillator.type = 'square';
+                    oscillator.frequency.setValueAtTime(220, audioContext.currentTime); // A3
+                    oscillator.frequency.linearRampToValueAtTime(196, audioContext.currentTime + 0.1); // G3
+                    break;
+                case 'tick':
+                    oscillator.type = 'triangle';
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                    break;
+            }
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        },
+        
+        // Show modal
+        showModal(title, message, onConfirm) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            document.getElementById('modal-confirm').onclick = () => {
+                this.hideModal();
+                if (onConfirm) onConfirm();
+            };
+            document.getElementById('modal').classList.add('active');
+        },
+        
+        // Hide modal
+        hideModal() {
+            document.getElementById('modal').classList.remove('active');
+        },
+        
+        // Display high scores
+        displayHighScores() {
+            const container = document.getElementById('high-scores-list');
+            const highScores = storageModule.loadHighScores();
+            
+            if (highScores.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-color); font-size: 1.2em;">Henüz yüksek skor kaydedilmemiş.</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            highScores.forEach((score, index) => {
+                const item = document.createElement('div');
+                item.className = 'score-item';
+                
+                const rankEmoji = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
+                
+                item.innerHTML = `
+                    <div class="score-rank">${rankEmoji}</div>
+                    <div class="score-details">
+                        <div class="score-name">${score.name}</div>
+                        <div class="score-date">${score.date} - ${score.settings?.topic || 'Bilinmeyen Konu'}</div>
+                    </div>
+                    <div class="score-points">${score.score}</div>
+                `;
+                
+                container.appendChild(item);
+            });
+        },
+        
+        // Confirm clear high scores
+        confirmClearHighScores() {
+            this.showModal(
+                'Skorları Temizle',
+                'Tüm yüksek skorları silmek istediğinizden emin misiniz?',
+                () => {
+                    storageModule.clearHighScores();
+                    this.displayHighScores();
+                }
+            );
+        },
+        
+        // Initialize UI
+        init() {
+            // Load settings and apply theme
+            storageModule.loadSettings();
+            document.documentElement.setAttribute('data-theme', state.theme);
+            
+            const themeButton = document.querySelector('.theme-toggle');
+            themeButton.textContent = state.theme === 'light' ? '🌙' : '☀️';
+            
+            // Set toggle states
+            document.getElementById('sound-toggle').classList.toggle('active', state.soundEnabled);
+            document.getElementById('timer-toggle').classList.toggle('active', state.timerEnabled);
+            
+            // Hide settings panel on outside click
+            document.addEventListener('click', (e) => {
+                const panel = document.getElementById('settings-panel');
+                const themeToggleBtn = document.querySelector('.theme-toggle');
+                const settingsBtn = document.getElementById('settings-button');
+                
+                const clickedInsidePanel = panel.contains(e.target);
+                const clickedThemeToggle = themeToggleBtn && themeToggleBtn.contains(e.target);
+                const clickedSettingsBtn = settingsBtn && settingsBtn.contains(e.target);
+
+                if (!clickedInsidePanel && !clickedThemeToggle && !clickedSettingsBtn) {
+                    panel.classList.remove('active');
+                }
+            });
+        }
+    };
+
+    /* ===== GAME MODULE ===== */
+    const gameModule = {
+        // Set player name and continue
+        setPlayerName() {
+            const nameInput = document.getElementById('player-name-input');
+            const name = nameInput.value.trim();
+            
+            if (!name) {
+                uiModule.showModal('Uyarı', 'Lütfen adınızı girin.');
+                return;
+            }
+            
+            state.playerName = name;
+            uiModule.showScreen('grade-select-screen');
+        },
+        
+        // Select grade
+        selectGrade(grade) {
+            state.currentGameSettings.grade = grade;
+            this.populateTopics(grade);
+            uiModule.showScreen('topic-select-screen');
+        },
+        
+        // Populate topics based on grade
+        populateTopics(grade) {
+            const topics = [...new Set(allQuestions.filter(q => q.grade == grade).map(q => q.topic))];
+            const container = document.getElementById('topic-buttons');
+            container.innerHTML = '';
+            
+            if (topics.length === 0) {
+                container.innerHTML = '<p>Bu sınıf için henüz konu eklenmemiş.</p>';
+            } else {
+                topics.forEach(topic => {
+                    const button = document.createElement('button');
+                    button.className = 'btn';
+                    button.innerText = topic;
+                    button.onclick = () => this.selectTopic(topic);
+                    container.appendChild(button);
+                });
+            }
+        },
+        
+        // Select topic
+        selectTopic(topic) {
+            state.currentGameSettings.topic = topic;
+            uiModule.showScreen('competition-mode-screen');
+        },
+        
+        // Select competition mode
+        selectCompetitionMode(mode) {
+            state.currentGameSettings.competitionMode = mode;
+            state.currentPlayer = (mode === 'grup') ? 'grup1' : 'bireysel';
+            uiModule.showScreen('difficulty-select-screen');
+        },
+        
+        // Select difficulty
+        selectDifficulty(difficulty) {
+            state.currentGameSettings.difficulty = difficulty;
+            uiModule.showScreen('game-mode-screen');
+        },
+        
+        // Start game
+        startGame(gameMode) {
+            state.currentGameSettings.gameMode = gameMode;
+            state.gameQuestions = allQuestions.filter(q => 
+                q.grade == state.currentGameSettings.grade && 
+                q.topic == state.currentGameSettings.topic && 
+                q.difficulty == state.currentGameSettings.difficulty && 
+                q.type == state.currentGameSettings.gameMode
+            );
+            
+            if (state.gameQuestions.length === 0) {
+                uiModule.showModal('Uyarı', 'Bu kriterlere uygun soru bulunamadı.');
+                return;
+            }
+            
+            // Shuffle questions
+            state.gameQuestions = state.gameQuestions.sort(() => Math.random() - 0.5);
+            
+            // Reset game state
+            state.currentQuestionIndex = 0;
+            state.score = { bireysel: 0, grup1: 0, grup2: 0 };
+            state.answeredQuestions.clear();
+            state.jokersUsed = { fiftyFifty: false, skip: false, time: false };
+            
+            // Show jokers only for quiz type
+            const jokersContainer = document.getElementById('jokers-container');
+            jokersContainer.style.display = gameMode === 'quiz' ? 'flex' : 'none';
+            
+            // Show timer container based on settings
+            const timerContainer = document.getElementById('timer-container');
+            timerContainer.style.display = state.timerEnabled ? 'flex' : 'none';
+            
+            uiModule.showScreen('game-screen');
+            this.updateScoreBoard();
+            this.updateProgressBar();
+            this.displayQuestion();
+        },
+        
+        // Display current question
+        displayQuestion() {
+            if (state.currentQuestionIndex >= state.gameQuestions.length) {
+                this.endGame();
+                return;
+            }
+            
+            const question = state.gameQuestions[state.currentQuestionIndex];
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            // Update navigation buttons
+            this.updateNavigationButtons();
+            
+            // Start timer if enabled
+            if (state.timerEnabled) {
+                this.startTimer();
+            }
+            
+            // Display question based on type
+            switch(question.type) {
+                case 'quiz':
+                    this.displayQuiz(question);
+                    break;
+                case 'fill-in':
+                    this.displayFillIn(question);
+                    break;
+                case 'matching':
+                    this.displayMatching(question);
+                    break;
+            }
+        },
+        
+        // Display quiz question
+        displayQuiz(question) {
+            document.getElementById('question-container').innerText = question.question;
+            const shuffledOptions = [...question.options].sort(() => Math.random() - 0.5);
+            const quizOptionsDiv = document.createElement('div');
+            quizOptionsDiv.id = 'quiz-options';
+            
+            shuffledOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.innerText = option;
+                button.onclick = () => this.checkQuizAnswer(option, question, button);
+                
+                // Disable if already answered
+                if (state.answeredQuestions.has(state.currentQuestionIndex)) {
+                    button.disabled = true;
+                    if (option === question.answer) {
+                        button.classList.add('correct');
+                    }
+                }
+                
+                quizOptionsDiv.appendChild(button);
+            });
+            
+            document.getElementById('options-container').appendChild(quizOptionsDiv);
+        },
+        
+        displayFillIn(question) {
+            // Boşluk alanını bırakma hedefi olarak oluştur
+            document.getElementById('question-container').innerHTML =
+                question.sentence.replace('___', '<span id="drop-target" class="drop-target" aria-label="Bırakma alanı">_____</span>');
+
+            const dropTarget = document.getElementById('drop-target');
+
+            // Kelimeleri karıştır ve sürüklenebilir öğeler oluştur
+            const words = [...question.distractors, question.answer].sort(() => Math.random() - 0.5);
+            const wordsContainer = document.createElement('div');
+            wordsContainer.id = 'fill-in-words';
+
+            words.forEach((word, index) => {
+                const wordEl = document.createElement('div');
+                wordEl.id = `draggable-${state.currentQuestionIndex}-${index}`;
+                wordEl.className = 'draggable-word';
+                wordEl.innerText = word;
+                wordEl.draggable = true;
+
+                wordEl.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', wordEl.id);
+                    setTimeout(() => wordEl.classList.add('dragging'), 0);
+                });
+                wordEl.addEventListener('dragend', () => {
+                    wordEl.classList.remove('dragging');
+                });
+
+                wordsContainer.appendChild(wordEl);
+            });
+
+            // Drop hedefi olayları
+            dropTarget.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                if (!state.answeredQuestions.has(state.currentQuestionIndex)) {
+                    dropTarget.classList.add('drag-over');
+                }
+            });
+
+            dropTarget.addEventListener('dragleave', () => {
+                dropTarget.classList.remove('drag-over');
+            });
+
+            dropTarget.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropTarget.classList.remove('drag-over');
+                if (state.answeredQuestions.has(state.currentQuestionIndex)) return;
+
+                const draggedId = e.dataTransfer.getData('text/plain');
+                const draggedEl = document.getElementById(draggedId);
+                if (!draggedEl) return;
+
+                this.checkFillInAnswer(draggedEl.innerText, question, draggedEl);
+            });
+
+            document.getElementById('options-container').appendChild(wordsContainer);
+
+            // Önceden cevaplanmışsa doğru cevabı göster ve etkileşimi kapat
+            if (state.answeredQuestions.has(state.currentQuestionIndex)) {
+                dropTarget.innerText = question.answer;
+                dropTarget.classList.add('correct');
+                wordsContainer.style.opacity = '0.6';
+                wordsContainer.style.pointerEvents = 'none';
+            }
+        },
+
+        // Display matching question
+        displayMatching(question) {
+            document.getElementById('question-container').innerText = 
+                question.question || "Terimleri ve açıklamalarını eşleştirin.";
+            
+            const container = document.createElement('div');
+            container.id = 'matching-game-container';
+            const termsCol = document.createElement('div');
+            termsCol.className = 'matching-column';
+            const defsCol = document.createElement('div');
+            defsCol.className = 'matching-column';
+            
+            let shuffledDefs = [...question.pairs].map(p => p.definition).sort(() => Math.random() - 0.5);
+            
+            question.pairs.forEach((pair, index) => {
+                const termItem = document.createElement('div');
+                termItem.className = 'match-item';
+                termItem.innerText = pair.term;
+                termItem.dataset.matchId = index;
+                termItem.onclick = (e) => this.selectMatchItem(e.target);
+                
+                // Check if already matched
+                if (state.answeredQuestions.has(state.currentQuestionIndex)) {
+                    termItem.classList.add('matched');
+                }
+                
+                termsCol.appendChild(termItem);
+            });
+            
+            shuffledDefs.forEach(defText => {
+                const originalPair = question.pairs.find(p => p.definition === defText);
+                const originalIndex = question.pairs.indexOf(originalPair);
+                const defItem = document.createElement('div');
+                defItem.className = 'match-item';
+                defItem.innerText = defText;
+                defItem.dataset.matchId = originalIndex;
+                defItem.onclick = (e) => this.selectMatchItem(e.target);
+                
+                // Check if already matched
+                if (state.answeredQuestions.has(state.currentQuestionIndex)) {
+                    defItem.classList.add('matched');
+                }
+                
+                defsCol.appendChild(defItem);
+            });
+            
+            container.appendChild(termsCol);
+            container.appendChild(defsCol);
+            document.getElementById('options-container').appendChild(container);
+        },
+        
+        // Check quiz answer
+        checkQuizAnswer(selectedOption, question, button) {
+            if (state.answeredQuestions.has(state.currentQuestionIndex)) return;
+            
+            this.stopTimer();
+            document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+            
+            if (selectedOption === question.answer) {
+                button.classList.add('correct');
+                this.updateScore(this.calculateScore());
+                uiModule.playSound('correct');
+            } else {
+                button.classList.add('incorrect');
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    if (btn.innerText === question.answer) btn.classList.add('correct');
+                });
+                uiModule.playSound('incorrect');
+            }
+            
+            state.answeredQuestions.add(state.currentQuestionIndex);
+            this.updateProgressBar();
+        },
+        
+        checkFillInAnswer(selectedWord, question, draggedElement) {
+            const dropTarget = document.getElementById('drop-target');
+            if (!dropTarget) return;
+
+            if (selectedWord === question.answer) {
+                // Doğru cevap
+                this.stopTimer();
+                dropTarget.textContent = selectedWord;
+                dropTarget.classList.remove('incorrect');
+                dropTarget.classList.add('correct');
+
+                // Kelimeleri pasifleştir
+                const list = document.getElementById('fill-in-words');
+                if (list) {
+                    list.style.opacity = '0.6';
+                    list.style.pointerEvents = 'none';
+                    list.querySelectorAll('.draggable-word').forEach(el => el.draggable = false);
+                }
+
+                this.updateScore(this.calculateScore());
+                uiModule.playSound('correct');
+
+                state.answeredQuestions.add(state.currentQuestionIndex);
+                this.updateProgressBar();
+            } else {
+                // Yanlış: mesaj ve geri dönme etkisi
+                uiModule.playSound('incorrect');
+
+                const originalText = dropTarget.textContent;
+                dropTarget.classList.add('incorrect');
+                dropTarget.textContent = 'Yanlış!';
+                draggedElement.classList.add('incorrect');
+
+                setTimeout(() => {
+                    dropTarget.classList.remove('incorrect');
+                    dropTarget.textContent = originalText || '_____';
+                    draggedElement.classList.remove('incorrect');
+                }, 600);
+            }
+        },
+        
+        // Select match item
+        selectMatchItem(item) {
+            if (item.classList.contains('matched') || state.answeredQuestions.has(state.currentQuestionIndex)) return;
+            
+            if (!state.selectedMatchItem) {
+                state.selectedMatchItem = item;
+                item.classList.add('selected');
+            } else {
+                if (state.selectedMatchItem === item) {
+                    state.selectedMatchItem.classList.remove('selected');
+                    state.selectedMatchItem = null;
+                    return;
+                }
+                
+                if (state.selectedMatchItem.dataset.matchId === item.dataset.matchId) {
+                    state.selectedMatchItem.classList.add('matched');
+                    item.classList.add('matched');
+                    state.selectedMatchItem.classList.remove('selected');
+                    this.updateScore(5);
+                    state.matchedCount++;
+                    uiModule.playSound('correct');
+                    
+                    const totalPairs = state.gameQuestions[state.currentQuestionIndex].pairs.length;
+                    if (state.matchedCount >= totalPairs) {
+                        state.answeredQuestions.add(state.currentQuestionIndex);
+                        this.stopTimer();
+                        this.updateProgressBar();
+                    }
+                } else {
+                    state.selectedMatchItem.classList.remove('selected');
+                    item.classList.add('incorrect');
+                    setTimeout(() => item.classList.remove('incorrect'), 500);
+                    uiModule.playSound('incorrect');
+                }
+                state.selectedMatchItem = null;
+            }
+        },
+        
+        // Calculate score based on time and difficulty
+        calculateScore() {
+            if (!state.timerEnabled) return 10;
+            
+            const timeLimit = state.timeLimits[state.currentGameSettings.difficulty];
+            const timeUsed = timeLimit - state.timeLeft;
+            
+            if (timeUsed <= 0) return 10; // Zaman bitmeden cevap
+            if (timeUsed <= timeLimit / 3) return 10;
+            if (timeUsed <= (timeLimit * 2) / 3) return 7;
+            return 5;
+        },
+        
+        // Update score
+        updateScore(points) {
+            state.score[state.currentPlayer] += points;
+            this.updateScoreBoard();
+        },
+        
+        // Update score board
+        updateScoreBoard() {
+            const scoreBoard = document.getElementById('score-board');
+            if (state.currentGameSettings.competitionMode === 'grup') {
+                scoreBoard.innerText = `Grup 1: ${state.score.grup1} - Grup 2: ${state.score.grup2} | Sıra: ${state.currentPlayer === 'grup1' ? 'Grup 1' : 'Grup 2'}`;
+            } else {
+                scoreBoard.innerText = `Skor: ${state.score.bireysel}`;
+            }
+        },
+        
+        // Update progress bar
+        updateProgressBar() {
+            const progress = (state.answeredQuestions.size / state.gameQuestions.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        },
+        
+        // Update navigation buttons
+        updateNavigationButtons() {
+            const prevBtn = document.getElementById('prev-question-btn');
+            const nextBtn = document.getElementById('next-question-btn');
+            
+            prevBtn.disabled = state.currentQuestionIndex === 0;
+            nextBtn.disabled = state.currentQuestionIndex === state.gameQuestions.length - 1;
+        },
+        
+        // Go to previous question
+        goToPreviousQuestion() {
+            if (state.currentQuestionIndex > 0) {
+                this.stopTimer();
+                state.currentQuestionIndex--;
+                state.selectedMatchItem = null;
+                state.matchedCount = 0;
+                this.displayQuestion();
+            }
+        },
+        
+        // Go to next question
+        goToNextQuestion() {
+            if (state.currentQuestionIndex < state.gameQuestions.length - 1) {
+                this.stopTimer();
+                state.currentQuestionIndex++;
+                state.selectedMatchItem = null;
+                state.matchedCount = 0;
+                this.displayQuestion();
+            }
+        },
+        
+        // Start timer
+        startTimer() {
+            this.stopTimer();
+            state.timeLeft = state.timeLimits[state.currentGameSettings.difficulty];
+            
+            const timerElement = document.getElementById('timer');
+            timerElement.textContent = state.timeLeft;
+            timerElement.classList.remove('warning');
+            
+            state.timerInterval = setInterval(() => {
+                state.timeLeft--;
+                timerElement.textContent = state.timeLeft;
+                
+                if (state.timeLeft <= 10) {
+                    timerElement.classList.add('warning');
+                    uiModule.playSound('tick');
+                }
+                
+                if (state.timeLeft <= 0) {
+                    this.timeUp();
+                }
+            }, 1000);
+        },
+        
+        // Stop timer
+        stopTimer() {
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+                state.timerInterval = null;
+            }
+        },
+        
+        timeUp() {
+            this.stopTimer();
+
+            if (!state.answeredQuestions.has(state.currentQuestionIndex)) {
+                state.answeredQuestions.add(state.currentQuestionIndex);
+                this.updateProgressBar();
+
+                // Tüm etkileşimleri kapat
+                document.querySelectorAll('.option-btn, .match-item, .draggable-word').forEach(el => {
+                    el.disabled = true;
+                    el.style.pointerEvents = 'none';
+                    el.style.opacity = '0.6';
+                });
+
+                // Doğru cevabı uygun yerde göster
+                const question = state.gameQuestions[state.currentQuestionIndex];
+                if (question.type === 'quiz') {
+                    document.querySelectorAll('.option-btn').forEach(btn => {
+                        if (btn.innerText === question.answer) btn.classList.add('correct');
+                    });
+                } else if (question.type === 'fill-in') {
+                    const dropTarget = document.getElementById('drop-target');
+                    if (dropTarget) {
+                        dropTarget.textContent = `Süre doldu! (${question.answer})`;
+                        dropTarget.classList.add('incorrect');
+                    }
+                }
+
+                uiModule.playSound('incorrect');
+            }
+        },
+        
+        // Use fifty-fifty joker
+        useFiftyFiftyJoker() {
+            if (state.jokersUsed.fiftyFifty || state.currentGameSettings.gameMode !== 'quiz' || state.answeredQuestions.has(state.currentQuestionIndex)) return;
+            
+            const question = state.gameQuestions[state.currentQuestionIndex];
+            const options = document.querySelectorAll('#quiz-options .option-btn');
+            const incorrectOptions = Array.from(options).filter(btn => btn.innerText !== question.answer);
+            
+            // Hide 2 incorrect options
+            for (let i = 0; i < 2 && i < incorrectOptions.length; i++) {
+                incorrectOptions[i].classList.add('hidden');
+            }
+            
+            state.jokersUsed.fiftyFifty = true;
+            document.getElementById('fifty-fifty-joker').disabled = true;
+        },
+        
+        // Use skip joker
+        useSkipJoker() {
+            if (state.jokersUsed.skip || state.answeredQuestions.has(state.currentQuestionIndex)) return;
+            
+            state.jokersUsed.skip = true;
+            document.getElementById('skip-joker').disabled = true;
+            
+            // Move to next question without penalty
+            this.goToNextQuestion();
+        },
+        
+        // Use time joker
+        useTimeJoker() {
+            if (state.jokersUsed.time || !state.timerEnabled || state.answeredQuestions.has(state.currentQuestionIndex)) return;
+            
+            state.timeLeft += 15;
+            document.getElementById('timer').textContent = state.timeLeft;
+            
+            state.jokersUsed.time = true;
+            document.getElementById('time-joker').disabled = true;
+        },
+        
+        // Finish game
+        finishGame() {
+            uiModule.showModal(
+                'Oyunu Bitir',
+                'Oyunu bitirmek istediğinizden emin misiniz?',
+                () => {
+                    this.stopTimer();
+                    this.endGame();
+                }
+            );
+        },
+        
+        // End game
+        endGame() {
+            this.stopTimer();
+            
+            // Save high score
+            const finalScore = state.currentGameSettings.competitionMode === 'grup' 
+                ? Math.max(state.score.grup1, state.score.grup2)
+                : state.score.bireysel;
+                
+            if (finalScore > 0) {
+                storageModule.saveHighScore(state.playerName, finalScore, state.currentGameSettings);
+            }
+            
+            uiModule.showScreen('end-screen');
+            
+            const finalScoreElement = document.getElementById('final-score');
+            if (state.currentGameSettings.competitionMode === 'grup') {
+                let resultText = `Grup 1: ${state.score.grup1} Puan<br>Grup 2: ${state.score.grup2} Puan<br><br>`;
+                if (state.score.grup1 > state.score.grup2) resultText += "🏆 Kazanan: Grup 1!";
+                else if (state.score.grup2 > state.score.grup1) resultText += "🏆 Kazanan: Grup 2!";
+                else resultText += "🤝 Berabere!";
+                finalScoreElement.innerHTML = resultText;
+            } else {
+                finalScoreElement.innerHTML = `🎯 Toplam Skorun: ${state.score.bireysel}`;
+            }
+        },
+        
+        // Reset and go to start
+        resetAndGoToStart() {
+            // Reset all game state
+            state.currentGameSettings = {};
+            state.gameQuestions = [];
+            state.currentQuestionIndex = 0;
+            state.score = { bireysel: 0, grup1: 0, grup2: 0 };
+            state.currentPlayer = 'bireysel';
+            state.selectedMatchItem = null;
+            state.matchedCount = 0;
+            state.answeredQuestions.clear();
+            state.jokersUsed = { fiftyFifty: false, skip: false, time: false };
+            
+            this.stopTimer();
+            uiModule.showScreen('start-screen');
+        }
+    };
+
+    /* ===== TEACHER PANEL MODULE ===== */
+    const teacherPanelModule = {
+        // Switch tab
+        switchTab(tabName) {
+            // Remove active class from all tab buttons and contents
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked tab button and corresponding content
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            
+            // Update content when switching to management tab
+            if (tabName === 'manage-tab') {
+                this.displayAllQuestionsForManagement();
+                this.updateStatistics();
+            }
+        },
+        
+        // Toggle question type fields
+        toggleQuestionTypeFields() {
+            document.getElementById('quiz-fields').style.display = 'none';
+            document.getElementById('fill-in-fields').style.display = 'none';
+            document.getElementById('matching-fields').style.display = 'none';
+            
+            const type = document.getElementById('type').value;
+            const fieldsToShow = document.getElementById(type + '-fields');
+            if(fieldsToShow) fieldsToShow.style.display = 'block';
+        },
+        
+        // Add matching pair field
+        addMatchingPairField(count = 1) {
+            const container = document.getElementById('matching-pairs-container');
+            if (!container) return;
+            
+            for (let i = 0; i < count; i++) {
+                const pairIndex = container.children.length;
+                if (pairIndex >= 5) {
+                    if (count === 1) uiModule.showModal('Uyarı', 'En fazla 5 çift ekleyebilirsiniz.');
+                    break;
+                }
+                
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+                div.style.gap = '10px';
+                div.style.marginBottom = '10px';
+                div.innerHTML = `
+                    <input type="text" placeholder="Terim ${pairIndex + 1}" name="match_term_${pairIndex}" style="flex: 1;">
+                    <input type="text" placeholder="Açıklama ${pairIndex + 1}" name="match_def_${pairIndex}" style="flex: 1;">
+                `;
+                container.appendChild(div);
+            }
+        },
+        
+        // Save question
+        saveQuestion(event) {
+            event.preventDefault();
+            const form = new FormData(event.target);
+            
+            const newQuestion = {
+                id: state.editingQuestionId || Date.now(),
+                grade: parseInt(form.get('grade')),
+                topic: form.get('topic').trim(),
+                difficulty: form.get('difficulty'),
+                type: form.get('type'),
+            };
+            
+            // Validate and build question based on type
+            if (newQuestion.type === 'quiz') {
+                newQuestion.question = form.get('question').trim();
+                const options = [
+                    form.get('option1'),
+                    form.get('option2'),
+                    form.get('option3'),
+                    form.get('option4')
+                ].map(o => o?.trim()).filter(Boolean);
+                
+                if (options.length < 2 || !newQuestion.question) {
+                    uiModule.showModal('Hata', 'Soru ve en az 2 seçenek girin.');
+                    return;
+                }
+                
+                newQuestion.options = options;
+                newQuestion.answer = options[0];
+            } 
+            else if (newQuestion.type === 'fill-in') {
+                newQuestion.sentence = form.get('fill-in-sentence').trim();
+                newQuestion.answer = form.get('fill-in-answer').trim();
+                newQuestion.distractors = form.get('fill-in-distractors')
+                    .split(',')
+                    .map(s => s.trim())
+                    .filter(Boolean);
+                
+                if (!newQuestion.sentence || !newQuestion.answer || newQuestion.distractors.length < 1) {
+                    uiModule.showModal('Hata', 'Boşluk doldurma alanlarını doldurun.');
+                    return;
+                }
+                
+                if (!newQuestion.sentence.includes('___')) {
+                    uiModule.showModal('Hata', 'Cümlede ___ işareti bulunmalıdır.');
+                    return;
+                }
+            }
+            else if (newQuestion.type === 'matching') {
+                newQuestion.pairs = [];
+                for (let i = 0; i < 5; i++) {
+                    const term = form.get(`match_term_${i}`);
+                    const def = form.get(`match_def_${i}`);
+                    if (term && def && term.trim() && def.trim()) {
+                        newQuestion.pairs.push({
+                            term: term.trim(),
+                            definition: def.trim()
+                        });
+                    }
+                }
+                
+                if (newQuestion.pairs.length < 3) {
+                    uiModule.showModal('Hata', 'En az 3 geçerli eşleştirme çifti girin.');
+                    return;
+                }
+            }
+            
+            // Save or update question
+            if (state.editingQuestionId) {
+                const index = allQuestions.findIndex(q => q.id === state.editingQuestionId);
+                if (index !== -1) {
+                    allQuestions[index] = newQuestion;
+                }
+                state.editingQuestionId = null;
+                document.getElementById('form-submit-btn').textContent = '💾 Soruyu Kaydet';
+            } else {
+                allQuestions.push(newQuestion);
+            }
+            
+            storageModule.saveQuestions();
+            uiModule.showModal('Başarılı', 'Soru başarıyla kaydedildi!');
+            
+            // Reset form
+            event.target.reset();
+            document.getElementById('matching-pairs-container').innerHTML = '';
+            this.setupTeacherPanel();
+            this.displayAllQuestionsForManagement();
+            this.updateStatistics();
+            this.updateTopicsDatalist();
+        },
+        
+        // Edit question
+        editQuestion(questionId) {
+            const question = allQuestions.find(q => q.id === questionId);
+            if (!question) return;
+            
+            state.editingQuestionId = questionId;
+            
+            // Switch to individual tab
+            this.switchTab('individual-tab');
+            document.querySelector('[onclick="teacherPanelModule.switchTab(\'individual-tab\')"]').classList.add('active');
+            
+            // Fill form with question data
+            document.getElementById('grade').value = question.grade;
+            document.getElementById('topic').value = question.topic;
+            document.getElementById('difficulty').value = question.difficulty;
+            document.getElementById('type').value = question.type;
+            
+            this.toggleQuestionTypeFields();
+            
+            if (question.type === 'quiz') {
+                document.getElementById('question').value = question.question;
+                // Correctly find the answer and put it first
+                const answer = question.answer;
+                const otherOptions = question.options.filter(opt => opt !== answer);
+                document.getElementById('option1').value = answer;
+                document.getElementById('option2').value = otherOptions[0] || '';
+                document.getElementById('option3').value = otherOptions[1] || '';
+                document.getElementById('option4').value = otherOptions[2] || '';
+            } else if (question.type === 'fill-in') {
+                document.getElementById('fill-in-sentence').value = question.sentence;
+                document.getElementById('fill-in-answer').value = question.answer;
+                document.getElementById('fill-in-distractors').value = question.distractors.join(', ');
+            } else if (question.type === 'matching') {
+                const container = document.getElementById('matching-pairs-container');
+                container.innerHTML = '';
+                question.pairs.forEach((pair, index) => {
+                    this.addMatchingPairField();
+                    const termInput = container.querySelector(`[name="match_term_${index}"]`);
+                    const defInput = container.querySelector(`[name="match_def_${index}"]`);
+                    if(termInput) termInput.value = pair.term;
+                    if(defInput) defInput.value = pair.definition;
+                });
+            }
+            
+            document.getElementById('form-submit-btn').textContent = '✏️ Soruyu Güncelle';
+        },
+        
+        // Delete question
+        deleteQuestion(questionId) {
+            uiModule.showModal(
+                'Soruyu Sil',
+                'Bu soruyu kalıcı olarak silmek istediğinizden emin misiniz?',
+                () => {
+                    allQuestions = allQuestions.filter(q => q.id !== questionId);
+                    storageModule.saveQuestions();
+                    this.displayAllQuestionsForManagement();
+                    this.updateStatistics();
+                    this.updateTopicsDatalist();
+                }
+            );
+        },
+        
+        // Filter questions
+        filterQuestions() {
+            const searchTerm = document.getElementById('question-search').value.toLowerCase();
+            const gradeFilter = document.getElementById('grade-filter').value;
+            const difficultyFilter = document.getElementById('difficulty-filter').value;
+            const typeFilter = document.getElementById('type-filter').value;
+            
+            state.filteredQuestions = allQuestions.filter(q => {
+                const matchesSearch = !searchTerm || 
+                    (q.question && q.question.toLowerCase().includes(searchTerm)) ||
+                    (q.sentence && q.sentence.toLowerCase().includes(searchTerm)) ||
+                    q.topic.toLowerCase().includes(searchTerm);
+                
+                const matchesGrade = !gradeFilter || q.grade.toString() === gradeFilter;
+                const matchesDifficulty = !difficultyFilter || q.difficulty === difficultyFilter;
+                const matchesType = !typeFilter || q.type === typeFilter;
+                
+                return matchesSearch && matchesGrade && matchesDifficulty && matchesType;
+            });
+            
+            this.displayFilteredQuestions();
+        },
+        
+        // Display filtered questions
+        displayFilteredQuestions() {
+            const container = document.getElementById('question-list-container');
+            // Arama filtresi aktifse filtrelenmiş soruları, değilse tüm soruları göster
+            const questionsToDisplay = (document.getElementById('question-search').value || document.getElementById('grade-filter').value || document.getElementById('difficulty-filter').value || document.getElementById('type-filter').value) 
+                ? state.filteredQuestions 
+                : allQuestions;
+            
+            container.innerHTML = '';
+            
+            if (questionsToDisplay.length === 0) {
+                container.innerHTML = '<p>Henüz soru eklenmemiş veya arama kriterlerinize uygun soru bulunamadı.</p>';
+                return;
+            }
+
+            const sortedQuestions = [...questionsToDisplay].sort((a,b) => `${a.grade}-${a.topic}`.localeCompare(`${b.grade}-${b.topic}`));
+
+            let currentTopicKey = '';
+            sortedQuestions.forEach(q => {
+                const topicKey = `${q.grade}. Sınıf - ${q.topic}`;
+                if (topicKey !== currentTopicKey) {
+                    const topicHeader = document.createElement('h4');
+                    topicHeader.innerText = topicKey;
+                    topicHeader.style.marginTop = '20px';
+                    topicHeader.style.borderBottom = '2px solid var(--primary-color)';
+                    topicHeader.style.paddingBottom = '10px';
+                    container.appendChild(topicHeader);
+                    currentTopicKey = topicKey;
+                }
+
+                const item = document.createElement('div');
+                item.className = 'question-item';
+                
+                let questionText = q.question || q.sentence || (q.pairs && q.pairs.length > 0 ? q.pairs[0].term + '...' : 'Eşleştirme Sorusu');
+                if (questionText.length > 80) questionText = questionText.substring(0, 80) + '...';
+
+                const typeIcons = { 'quiz': '✅', 'fill-in': '📝', 'matching': '🔗' };
+                const difficultyColors = { 'kolay': '#28a745', 'orta': '#ffc107', 'zor': '#dc3545' };
+
+                item.innerHTML = `
+                    <div class="question-details">
+                        <strong>${typeIcons[q.type] || '❓'} ${questionText}</strong><br>
+                        <small>
+                            <span style="background-color: ${difficultyColors[q.difficulty]}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">
+                                ${q.difficulty.toUpperCase()}
+                            </span>
+                            | <strong>Tip:</strong> ${q.type}
+                        </small>
+                    </div>
+                    <div class="question-actions">
+                        <button class="edit-btn" onclick="teacherPanelModule.editQuestion(${q.id})">✏️ Düzenle</button>
+                        <button class="delete-btn" onclick="teacherPanelModule.deleteQuestion(${q.id})">🗑️ Sil</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        },
+        
+        // Display all questions for management
+        displayAllQuestionsForManagement() {
+            // Filtreleri sıfırla ve tüm soruları göster
+            document.getElementById('question-search').value = '';
+            document.getElementById('grade-filter').value = '';
+            document.getElementById('difficulty-filter').value = '';
+            document.getElementById('type-filter').value = '';
+            state.filteredQuestions = [];
+            this.displayFilteredQuestions();
+        },
+        
+        // Update statistics
+        updateStatistics() {
+            const totalQuestions = allQuestions.length;
+            const totalTopics = [...new Set(allQuestions.map(q => q.topic))].length;
+            const grade6Questions = allQuestions.filter(q => q.grade === 6).length;
+            const grade7Questions = allQuestions.filter(q => q.grade === 7).length;
+            
+            document.getElementById('total-questions').textContent = totalQuestions;
+            document.getElementById('total-topics').textContent = totalTopics;
+            document.getElementById('grade6-questions').textContent = grade6Questions;
+            document.getElementById('grade7-questions').textContent = grade7Questions;
+        },
+        
+        // Update topics datalist
+        updateTopicsDatalist() {
+            const datalist = document.getElementById('topics-datalist');
+            const topics = [...new Set(allQuestions.map(q => q.topic))];
+            
+            datalist.innerHTML = '';
+            topics.forEach(topic => {
+                const option = document.createElement('option');
+                option.value = topic;
+                datalist.appendChild(option);
+            });
+        },
+        
+        // Validate bulk import
+        validateBulkImport() {
+            const textarea = document.getElementById('bulk-import-textarea');
+            const messagesDiv = document.getElementById('import-messages');
+            const previewDiv = document.getElementById('import-preview');
+            
+            messagesDiv.innerHTML = '';
+            previewDiv.innerHTML = '';
+            
+            const jsonText = textarea.value.trim();
+            if (!jsonText) {
+                this.showImportMessage('❌ Lütfen JSON verisi girin.', 'error');
+                return;
+            }
+            
+            let questions;
+            try {
+                questions = JSON.parse(jsonText);
+            } catch (e) {
+                this.showImportMessage('❌ Geçersiz JSON formatı. Lütfen formatı kontrol edin.', 'error');
+                return;
+            }
+            
+            if (!Array.isArray(questions)) {
+                this.showImportMessage('❌ JSON verisi bir dizi olmalıdır.', 'error');
+                return;
+            }
+            
+            const validationResults = this.validateQuestions(questions);
+            
+            if (validationResults.errors.length > 0) {
+                this.showImportMessage('❌ Hatalar bulundu:', 'error');
+                const errorList = document.createElement('ul');
+                validationResults.errors.forEach(error => {
+                    const li = document.createElement('li');
+                    li.textContent = error;
+                    errorList.appendChild(li);
+                });
+                messagesDiv.appendChild(errorList);
+                return;
+            }
+            
+            if (validationResults.warnings.length > 0) {
+                this.showImportMessage('⚠️ Uyarılar:', 'warning');
+                const warningList = document.createElement('ul');
+                validationResults.warnings.forEach(warning => {
+                    const li = document.createElement('li');
+                    li.textContent = warning;
+                    warningList.appendChild(li);
+                });
+                messagesDiv.appendChild(warningList);
+            }
+            
+            this.showImportMessage(`✅ ${validationResults.validQuestions.length} soru doğrulandı!`, 'success');
+            this.showImportPreview(validationResults.validQuestions);
+        },
+        
+        // Validate questions array
+        validateQuestions(questions) {
+            const errors = [];
+            const warnings = [];
+            const validQuestions = [];
+            
+            questions.forEach((question, index) => {
+                const questionNum = index + 1;
+                const requiredFields = ['grade', 'topic', 'difficulty', 'type'];
+                let hasError = false;
+
+                // Check required fields
+                requiredFields.forEach(field => {
+                    if (question[field] === undefined || question[field] === '') {
+                        errors.push(`Soru ${questionNum}: '${field}' alanı eksik.`);
+                        hasError = true;
+                    }
+                });
+
+                if(hasError) return;
+                
+                // Grade validation
+                if (![6, 7].includes(parseInt(question.grade))) {
+                    errors.push(`Soru ${questionNum}: Sınıf 6 veya 7 olmalıdır.`);
+                    hasError = true;
+                }
+                
+                // Difficulty validation
+                if (!['kolay', 'orta', 'zor'].includes(question.difficulty)) {
+                    errors.push(`Soru ${questionNum}: Zorluk 'kolay', 'orta' veya 'zor' olmalıdır.`);
+                    hasError = true;
+                }
+                
+                // Type validation
+                if (!['quiz', 'fill-in', 'matching'].includes(question.type)) {
+                    errors.push(`Soru ${questionNum}: Tip 'quiz', 'fill-in' veya 'matching' olmalıdır.`);
+                    hasError = true;
+                }
+                
+                // Type-specific validations
+                if (question.type === 'quiz') {
+                    if (!question.question) { errors.push(`Soru ${questionNum}: Çoktan seçmeli soru metni eksik.`); hasError = true; }
+                    if (!question.options || !Array.isArray(question.options) || question.options.length < 2) { errors.push(`Soru ${questionNum}: En az 2 seçenek gerekli.`); hasError = true; }
+                    if (!question.answer) { errors.push(`Soru ${questionNum}: Doğru cevap eksik.`); hasError = true; }
+                    if (question.answer && question.options && !question.options.includes(question.answer)) { errors.push(`Soru ${questionNum}: Cevap, seçenekler arasında olmalıdır.`); hasError = true; }
+                } else if (question.type === 'fill-in') {
+                    if (!question.sentence || !question.sentence.includes('___')) { errors.push(`Soru ${questionNum}: Cümle eksik veya '___' işareti yok.`); hasError = true; }
+                    if (!question.answer) { errors.push(`Soru ${questionNum}: Doğru cevap eksik.`); hasError = true; }
+                    if (!question.distractors || !Array.isArray(question.distractors) || question.distractors.length < 1) { errors.push(`Soru ${questionNum}: En az 1 çeldirici gerekli.`); hasError = true; }
+                } else if (question.type === 'matching') {
+                    if (!question.pairs || !Array.isArray(question.pairs) || question.pairs.length < 3) { errors.push(`Soru ${questionNum}: En az 3 eşleştirme çifti gerekli.`); hasError = true;
+                    } else {
+                        question.pairs.forEach((pair, pairIndex) => {
+                            if (!pair.term || !pair.definition) {
+                                errors.push(`Soru ${questionNum}, Çift ${pairIndex + 1}: Terim ve açıklama gerekli.`);
+                                hasError = true;
+                            }
+                        });
+                    }
+                }
+                
+                // If no errors for this question, add to valid questions
+                if (!hasError) {
+                    const validQuestion = {...question, id: Date.now() + index};
+                    validQuestion.grade = parseInt(validQuestion.grade);
+                    
+                    // Check for duplicates
+                    const existingText = validQuestion.question || validQuestion.sentence;
+                    const isDuplicate = existingText && allQuestions.some(existingQ => 
+                        (existingQ.question && existingQ.question.toLowerCase() === existingText.toLowerCase()) ||
+                        (existingQ.sentence && existingQ.sentence.toLowerCase() === existingText.toLowerCase())
+                    );
+                    
+                    if (isDuplicate) {
+                        warnings.push(`Soru ${questionNum}: Benzer bir soru zaten mevcut.`);
+                    }
+                    
+                    validQuestions.push(validQuestion);
+                }
+            });
+            
+            return { errors, warnings, validQuestions };
+        },
+        
+        // Show import message
+        showImportMessage(message, type) {
+            const messagesDiv = document.getElementById('import-messages');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            messagesDiv.appendChild(alert);
+        },
+        
+        // Show import preview
+        showImportPreview(questions) {
+            const previewDiv = document.getElementById('import-preview');
+            previewDiv.innerHTML = `
+                <h4>📋 Önizleme (${questions.length} soru)</h4>
+                <div style="max-height: 300px; overflow-y: auto; border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; background-color: var(--secondary-color);">
+            `;
+            
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.style.marginBottom = '15px';
+                questionDiv.style.padding = '10px';
+                questionDiv.style.backgroundColor = 'var(--card-bg)';
+                questionDiv.style.borderRadius = '6px';
+                questionDiv.style.border = '1px solid var(--border-color)';
+                
+                let questionText = question.question || question.sentence || 'Eşleştirme sorusu';
+                if (questionText.length > 100) questionText = questionText.substring(0, 100) + '...';
+                
+                questionDiv.innerHTML = `
+                    <strong>${index + 1}.</strong> ${questionText}<br>
+                    <small><strong>Sınıf:</strong> ${question.grade}, <strong>Konu:</strong> ${question.topic}, 
+                    <strong>Zorluk:</strong> ${question.difficulty}, <strong>Tip:</strong> ${question.type}</small>
+                `;
+                
+                previewDiv.appendChild(questionDiv);
+            });
+            
+            const importButton = document.createElement('button');
+            importButton.className = 'btn btn-success';
+            importButton.style.marginTop = '15px';
+            importButton.innerHTML = '📥 Soruları İçe Aktar';
+            importButton.onclick = () => this.confirmBulkImport(questions);
+            previewDiv.appendChild(importButton);
+        },
+        
+        // Confirm bulk import
+        confirmBulkImport(questions) {
+            uiModule.showModal(
+                'Soruları İçe Aktar',
+                `${questions.length} soru eklenecek. Onaylıyor musunuz?`,
+                () => {
+                    allQuestions.push(...questions);
+                    storageModule.saveQuestions();
+                    
+                    document.getElementById('bulk-import-textarea').value = '';
+                    document.getElementById('import-messages').innerHTML = '';
+                    document.getElementById('import-preview').innerHTML = '';
+                    
+                    this.showImportMessage(`✅ ${questions.length} soru başarıyla eklendi!`, 'success');
+                    this.updateStatistics();
+                    this.updateTopicsDatalist();
+                }
+            );
+        },
+        
+        // Load sample data
+        loadSampleData() {
+            const sampleData = [
+                {
+                    "grade": 6,
+                    "topic": "İlk Türk Devletleri",
+                    "difficulty": "kolay",
+                    "type": "quiz",
+                    "question": "Orta Asya'da kurulan ilk Türk devleti hangisidir?",
+                    "options": ["Asya Hun Devleti", "Göktürkler", "Uygurlar", "Karahanlılar"],
+                    "answer": "Asya Hun Devleti"
+                },
+                {
+                    "grade": 7,
+                    "topic": "Osmanlı Devleti",
+                    "difficulty": "orta",
+                    "type": "fill-in",
+                    "sentence": "Osmanlı Devleti ___ yılında kurulmuştur.",
+                    "answer": "1299",
+                    "distractors": ["1300", "1298", "1301"]
+                },
+                {
+                    "grade": 6,
+                    "topic": "İlk Türk Devletleri",
+                    "difficulty": "zor",
+                    "type": "matching",
+                    "question": "Liderleri ve devletlerini eşleştirin.",
+                    "pairs": [
+                        {"term": "Bumin Kağan", "definition": "Göktürk Devleti"},
+                        {"term": "Teoman", "definition": "Asya Hun Devleti"},
+                        {"term": "Kutluk Bilge Kül Kağan", "definition": "Uygur Devleti"}
+                    ]
+                }
+            ];
+            
+            document.getElementById('bulk-import-textarea').value = JSON.stringify(sampleData, null, 2);
+        },
+        
+        // Clear import data
+        clearImportData() {
+            document.getElementById('bulk-import-textarea').value = '';
+            document.getElementById('import-messages').innerHTML = '';
+            document.getElementById('import-preview').innerHTML = '';
+        },
+        
+        // Export all questions
+        exportAllQuestions() {
+            if (allQuestions.length === 0) {
+                uiModule.showModal('Uyarı', 'Dışa aktarılacak soru bulunamadı.');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(allQuestions, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'sosyal-bilgiler-sorular.json';
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            uiModule.showModal('Başarılı', 'Sorular başarıyla dışa aktarıldı!');
+        },
+        
+        // Confirm delete all questions
+        confirmDeleteAllQuestions() {
+            uiModule.showModal(
+                'Tüm Soruları Sil',
+                'TÜM SORULARI silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!',
+                () => {
+                    uiModule.showModal(
+                        'Son Onay',
+                        'Bu işlem kalıcıdır ve tüm eklediğiniz sorular silinecek. Devam etmek istediğinizden emin misiniz?',
+                        () => {
+                            allQuestions = []; // Başlangıç sorularını da siler
+                            storageModule.saveQuestions();
+                            this.displayAllQuestionsForManagement();
+                            this.updateStatistics();
+                            this.updateTopicsDatalist();
+                            uiModule.showModal('Başarılı', 'Tüm sorular silindi.');
+                        }
+                    );
+                }
+            );
+        },
+        
+        // Setup teacher panel
+        setupTeacherPanel() {
+            this.toggleQuestionTypeFields();
+            this.addMatchingPairField(3);
+            this.updateTopicsDatalist();
+        }
+    };
+
+    /* ===== INITIALIZATION ===== */
+    document.addEventListener('DOMContentLoaded', () => {
+        // Load data and initialize modules
+        storageModule.loadQuestions();
+        uiModule.init();
+        teacherPanelModule.setupTeacherPanel();
+        
+        // Show start screen
+        uiModule.showScreen('start-screen');
+    });
+    </script>
+</body>
+</html>
