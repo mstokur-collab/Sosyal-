@@ -76,6 +76,23 @@ describe('teacherPanelModule.validateQuestions', () => {
     expect(result.validQuestions).toHaveLength(0);
   });
 
+  test('rejects quiz question when answer is not among options', () => {
+    const result = teacherPanelModule.validateQuestions([
+      {
+        grade: 6,
+        topic: 'İlk Türk Devletleri',
+        difficulty: 'kolay',
+        type: 'quiz',
+        question: 'Orhun Yazıtları hangi alfabe ile yazılmıştır?',
+        options: ['Latin', 'Arap', 'Kiril'],
+        answer: 'Göktürk'
+      }
+    ]);
+
+    expect(result.errors).toContain('Soru 1: Cevap, seçenekler arasında olmalıdır.');
+    expect(result.validQuestions).toHaveLength(0);
+  });
+
   test('accepts valid quiz question and warns about duplicates', () => {
     teacherPanelModule.__setAllQuestionsForTesting([
       {

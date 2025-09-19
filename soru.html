@@ -1209,7 +1209,7 @@
                 <div class="jokers-container" id="jokers-container">
                     <button class="joker-btn" id="fifty-fifty-joker" onclick="gameModule.useFiftyFiftyJoker()">🎯 %50</button>
                     <button class="joker-btn" id="skip-joker" onclick="gameModule.useSkipJoker()">⏭️ Atla</button>
-                    <button class="joker-btn" id="time-joker" onclick="gameModule.useTimeJoker()">⏰ +15&nbsp;sn</button>
+                    <button class="joker-btn" id="time-joker" onclick="gameModule.useTimeJoker()">⏰ +15 sn</button>
                 </div>
 
                 <div id="score-board">Skor: 0</div>
@@ -2392,8 +2392,8 @@
 
     /* ===== TEACHER PANEL MODULE ===== */
     const teacherPanelModule = {
-        // Switch tab (eventObj: gerçek DOM olayı veya currentTarget içeren sentetik nesne)
-        switchTab(tabName, eventObj) {
+        // Switch tab (source: gerçek DOM olayı, sentetik nesne veya doğrudan düğme)
+        switchTab(tabName, source) {
             // Remove active class from all tab buttons and contents
             const tabButtons = document.querySelectorAll('.tab-button');
             const tabContents = document.querySelectorAll('.tab-content');
@@ -2401,8 +2401,10 @@
             tabContents.forEach(content => content.classList.remove('active'));
 
             // Add active class to clicked tab button and corresponding content
-            const providedTarget = eventObj && eventObj.currentTarget ? eventObj.currentTarget : null;
-            const targetButton = providedTarget || document.querySelector(`.tab-button[data-tab="${tabName}"]`);
+            const possibleSource = source && (source.currentTarget || source.target || source);
+            const targetButton = possibleSource && possibleSource.classList
+                ? possibleSource
+                : document.querySelector(`.tab-button[data-tab="${tabName}"]`);
             if (targetButton) {
                 targetButton.classList.add('active');
             } else {
@@ -2557,7 +2559,7 @@
             
             // Switch to individual tab
             const individualTabButton = document.querySelector('.tab-button[data-tab="individual-tab"]');
-            this.switchTab('individual-tab', individualTabButton ? { currentTarget: individualTabButton } : undefined);
+            this.switchTab('individual-tab', individualTabButton || undefined);
             
             // Fill form with question data
             document.getElementById('grade').value = question.grade;
