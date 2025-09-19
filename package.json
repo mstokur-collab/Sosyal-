@@ -1,0 +1,17 @@
+{
+  "name": "sosyal-",
+  "version": "1.0.0",
+  "description": "Bu proje, ortaokul öğrencileri için hazırlanmış kapsamlı bir Sosyal Bilgiler bilgi yarışması uygulamasıdır. Çoktan seçmeli, boşluk doldurma ve eşleştirme olmak üzere üç farklı soru türünü destekler. Öğretmenler için gelişmiş bir yönetim paneli bulunur ve yarışma hem bireysel hem de grup modlarını destekler.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "jest": "^30.1.3",
+    "jsdom": "^27.0.0"
+  }
+}
