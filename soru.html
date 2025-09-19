@@ -172,7 +172,31 @@
             width: 100%;
             max-width: 800px;
         }
-        
+
+        .developer-section {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            max-width: 300px;
+            text-align: right;
+        }
+
+        .developer-section h3 {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+        }
+
+        .developer-section p {
+            margin: 0;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
         .btn {
             background-color: var(--primary-color);
             color: white;
@@ -1094,6 +1118,10 @@
                 <button class="btn btn-secondary" onclick="uiModule.showScreen('teacher-panel-screen')">👩‍🏫 Öğretmen Paneli</button>
                 <button id="settings-button" class="btn btn-warning" onclick="uiModule.toggleSettings()" style="font-size: 1.2em;">⚙️ Ayarlar</button>
             </div>
+            <div class="developer-section">
+                <h3>HAZIRLAYAN</h3>
+                <p>MUSTAFA OKUR</p>
+            </div>
         </div>
 
         <!-- Player Name Screen -->
@@ -1181,7 +1209,7 @@
                 <div class="jokers-container" id="jokers-container">
                     <button class="joker-btn" id="fifty-fifty-joker" onclick="gameModule.useFiftyFiftyJoker()">🎯 %50</button>
                     <button class="joker-btn" id="skip-joker" onclick="gameModule.useSkipJoker()">⏭️ Atla</button>
-                    <button class="joker-btn" id="time-joker" onclick="gameModule.useTimeJoker()">⏰ +15sn</button>
+                    <button class="joker-btn" id="time-joker" onclick="gameModule.useTimeJoker()">⏰ +15 sn</button>
                 </div>
 
                 <div id="score-board">Skor: 0</div>
@@ -1223,9 +1251,9 @@
             
             <!-- Tab Navigation -->
             <div class="tab-navigation">
-                <button class="tab-button active" onclick="teacherPanelModule.switchTab('individual-tab')">➕ Tekil Soru Ekle</button>
-                <button class="tab-button" onclick="teacherPanelModule.switchTab('bulk-tab')">📂 Toplu Soru Ekle</button>
-                <button class="tab-button" onclick="teacherPanelModule.switchTab('manage-tab')">📊 Soru Yönetimi</button>
+                <button class="tab-button active" data-tab="individual-tab" onclick="teacherPanelModule.switchTab('individual-tab', event)">➕ Tekil Soru Ekle</button>
+                <button class="tab-button" data-tab="bulk-tab" onclick="teacherPanelModule.switchTab('bulk-tab', event)">📂 Toplu Soru Ekle</button>
+                <button class="tab-button" data-tab="manage-tab" onclick="teacherPanelModule.switchTab('manage-tab', event)">📊 Soru Yönetimi</button>
             </div>
 
             <!-- Individual Question Tab -->
@@ -2365,15 +2393,24 @@
     /* ===== TEACHER PANEL MODULE ===== */
     const teacherPanelModule = {
         // Switch tab
-        switchTab(tabName) {
+        switchTab(tabName, eventObj = null) {
             // Remove active class from all tab buttons and contents
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
             // Add active class to clicked tab button and corresponding content
-            event.target.classList.add('active');
-            document.getElementById(tabName).classList.add('active');
-            
+            const targetButton = (eventObj && eventObj.currentTarget) || document.querySelector(`.tab-button[data-tab="${tabName}"]`);
+            if (targetButton) {
+                targetButton.classList.add('active');
+            }
+
+            const tabContent = document.getElementById(tabName);
+            if (tabContent) {
+                tabContent.classList.add('active');
+            }
+
             // Update content when switching to management tab
             if (tabName === 'manage-tab') {
                 this.displayAllQuestionsForManagement();
@@ -2517,7 +2554,6 @@
             
             // Switch to individual tab
             this.switchTab('individual-tab');
-            document.querySelector('[onclick="teacherPanelModule.switchTab(\'individual-tab\')"]').classList.add('active');
             
             // Fill form with question data
             document.getElementById('grade').value = question.grade;
@@ -2985,8 +3021,19 @@
             this.toggleQuestionTypeFields();
             this.addMatchingPairField(3);
             this.updateTopicsDatalist();
+        },
+
+        // Testing helpers (uygulama davranışını etkilemez)
+        __setAllQuestionsForTesting(questions) {
+            allQuestions = questions;
+        },
+
+        __getAllQuestionsForTesting() {
+            return allQuestions;
         }
     };
+
+    window.teacherPanelModule = teacherPanelModule;
 
     /* ===== INITIALIZATION ===== */
     document.addEventListener('DOMContentLoaded', () => {
