@@ -2081,6 +2081,7 @@
             
             state.answeredQuestions.add(state.currentQuestionIndex);
             this.updateProgressBar();
+            this.advanceTurnAfterQuestion();
         },
         
         checkFillInAnswer(selectedWord, question, draggedElement) {
@@ -2107,6 +2108,7 @@
 
                 state.answeredQuestions.add(state.currentQuestionIndex);
                 this.updateProgressBar();
+                this.advanceTurnAfterQuestion();
             } else {
                 // Yanlış: mesaj ve geri dönme etkisi
                 uiModule.playSound('incorrect');
@@ -2151,6 +2153,7 @@
                         state.answeredQuestions.add(state.currentQuestionIndex);
                         this.stopTimer();
                         this.updateProgressBar();
+                        this.advanceTurnAfterQuestion();
                     }
                 } else {
                     state.selectedMatchItem.classList.remove('selected');
@@ -2180,7 +2183,15 @@
             state.score[state.currentPlayer] += points;
             this.updateScoreBoard();
         },
-        
+
+        // Advance turn to next group after a question is completed
+        advanceTurnAfterQuestion() {
+            if (state.currentGameSettings.competitionMode !== 'grup') return;
+
+            state.currentPlayer = state.currentPlayer === 'grup1' ? 'grup2' : 'grup1';
+            this.updateScoreBoard();
+        },
+
         // Update score board
         updateScoreBoard() {
             const scoreBoard = document.getElementById('score-board');
@@ -2289,6 +2300,7 @@
                 }
 
                 uiModule.playSound('incorrect');
+                this.advanceTurnAfterQuestion();
             }
         },
         
@@ -2630,7 +2642,7 @@
         // Display filtered questions
         displayFilteredQuestions() {
             const container = document.getElementById('question-list-container');
-            // Arama filtresi aktifse filtrelenmiş soruları, değilse tüm soruları göster
+            // Herhangi bir filtre (arama, sınıf, zorluk veya tip) aktifse filtrelenmiş soruları, aksi halde tüm soruları göster
             const questionsToDisplay = (document.getElementById('question-search').value || document.getElementById('grade-filter').value || document.getElementById('difficulty-filter').value || document.getElementById('type-filter').value) 
                 ? state.filteredQuestions 
                 : allQuestions;
