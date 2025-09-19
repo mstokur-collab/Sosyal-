@@ -9,7 +9,7 @@ Bu proje, ortaokul öğrencileri için hazırlanmış kapsamlı bir Sosyal Bilgi
 
 ## Öğretmen Paneli Özellikleri
 - **Tekil soru ekleme:** Çoktan seçmeli, boşluk doldurma ve eşleştirme soruları için ayrıntılı form alanları.
-- **Toplu soru içe aktarma:** JSON formatında soruları doğrulama, ön izleme ve ekleme.
+- **Toplu soru içe aktarma:** JSON formatında soruları doğrulama, önizleme ve ekleme.
 - **Soru yönetimi:** Var olan soruları filtreleme, düzenleme ve silme.
 - **İstatistikler:** Soru dağılımlarını ve toplam soru sayısını takip etme.
 

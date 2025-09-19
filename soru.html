@@ -89,8 +89,8 @@
         /* Settings Panel */
         .settings-panel {
             position: absolute;
-            top: 80px;
-            right: 20px;
+            bottom: 110px;
+            left: 30px;
             background: var(--card-bg);
             border: 2px solid var(--border-color);
             border-radius: var(--border-radius);
@@ -173,26 +173,44 @@
             max-width: 800px;
         }
 
+        #start-screen {
+            position: relative;
+            padding: 40px;
+        }
+
         .developer-section {
-            margin-top: 40px;
-            padding: 20px;
+            position: absolute;
+            right: 30px;
+            bottom: 30px;
+            margin-top: 0;
+            padding: 16px 24px;
             background-color: var(--secondary-color);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            max-width: 500px;
-            text-align: left;
+            max-width: 260px;
+            text-align: right;
         }
 
         .developer-section h3 {
-            margin: 0 0 10px 0;
+            margin: 0 0 6px 0;
             color: var(--primary-color);
+            font-size: 1em;
+            letter-spacing: 0.08em;
         }
 
         .developer-section p {
             margin: 0;
             font-size: 1.1em;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-color);
+        }
+
+        .start-settings {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            font-size: 1.1em;
+            padding: 14px 26px;
         }
 
         .btn {
@@ -379,6 +397,8 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
+            padding-right: 260px;
         }
         
         #question-container {
@@ -452,12 +472,108 @@
             75% { transform: translateX(5px); }
         }
         
+        .score-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 240px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 3px solid var(--primary-color);
+            padding: 18px 20px;
+            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .score-panel::after {
+            content: '';
+            position: absolute;
+            inset: -20%;
+            border-radius: inherit;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.35) 0%, rgba(59, 130, 246, 0) 70%);
+            transform: scale(0.5);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .score-heading {
+            font-size: 1.1em;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
         #score-board {
-            margin-top: 20px;
-            font-size: 1.5em;
-            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .score-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .score-label {
+            opacity: 0.9;
+        }
+
+        .score-number {
             color: var(--primary-color);
-            min-height: 30px;
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+
+        .score-value-single {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            line-height: 1;
+        }
+
+        .score-turn {
+            margin-top: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .score-panel.score-update {
+            animation: scorePop 0.6s ease;
+        }
+
+        .score-panel.score-update::after {
+            animation: scoreBurst 0.6s ease;
+        }
+
+        @keyframes scorePop {
+            0% { transform: scale(0.95); }
+            40% { transform: scale(1.08); }
+            70% { transform: scale(0.98); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes scoreBurst {
+            0% {
+                transform: scale(0.5);
+                opacity: 0.6;
+            }
+            70% {
+                transform: scale(1.6);
+                opacity: 0;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.6);
+            }
         }
         
         /* Matching game styles */
@@ -1081,10 +1197,51 @@
             }
 
             .settings-panel {
-                top: 60px;
-                right: 10px;
-                left: 10px;
-                width: auto;
+                top: auto;
+                bottom: 120px;
+                left: 15px;
+                right: 15px;
+            }
+
+            #game-area {
+                padding-right: 0;
+            }
+
+            .score-panel {
+                position: relative;
+                width: 100%;
+                max-width: 320px;
+                margin: 0 auto 20px auto;
+            }
+
+            .score-heading {
+                text-align: center;
+            }
+
+            .score-line {
+                font-size: 1.1em;
+            }
+
+            .score-value-single {
+                font-size: 2.2em;
+            }
+
+            #start-screen {
+                padding: 30px 20px 60px;
+            }
+
+            .start-settings {
+                position: static;
+                align-self: flex-start;
+                margin-top: 20px;
+            }
+
+            .developer-section {
+                position: static;
+                margin-top: 30px;
+                width: 100%;
+                max-width: none;
+                text-align: center;
             }
         }
     </style>
@@ -1114,10 +1271,10 @@
                 <button class="btn" onclick="uiModule.showScreen('player-name-screen')">🎮 Oyuna Başla</button>
                 <button class="btn btn-secondary" onclick="uiModule.showScreen('high-scores-screen')">🏆 Yüksek Skorlar</button>
                 <button class="btn btn-secondary" onclick="uiModule.showScreen('teacher-panel-screen')">👩‍🏫 Öğretmen Paneli</button>
-                <button id="settings-button" class="btn btn-warning" onclick="uiModule.toggleSettings()" style="font-size: 1.2em;">⚙️ Ayarlar</button>
             </div>
+            <button id="settings-button" class="btn btn-warning start-settings" onclick="uiModule.toggleSettings()">⚙️ Ayarlar</button>
             <div class="developer-section">
-                <h3>Program Geliştiricisi</h3>
+                <h3>HAZIRLAYAN</h3>
                 <p>MUSTAFA OKUR</p>
             </div>
         </div>
@@ -1210,7 +1367,13 @@
                     <button class="joker-btn" id="time-joker" onclick="gameModule.useTimeJoker()">⏰ +15 sn</button>
                 </div>
 
-                <div id="score-board">Skor: 0</div>
+                <div class="score-panel" id="score-panel">
+                    <div class="score-heading" id="score-heading">Skor</div>
+                    <div id="score-board">
+                        <div class="score-value-single">0</div>
+                    </div>
+                    <div class="score-turn" id="score-turn" style="display: none;"></div>
+                </div>
                 <div id="question-container"></div>
                 <div id="options-container"></div>
                 
@@ -1441,6 +1604,7 @@
         gameQuestions: [],
         currentQuestionIndex: 0,
         score: { bireysel: 0, grup1: 0, grup2: 0 },
+        lastScoreSignature: '',
         currentPlayer: 'bireysel',
         selectedMatchItem: null,
         matchedCount: 0,
@@ -1767,13 +1931,13 @@
             // Set toggle states
             document.getElementById('sound-toggle').classList.toggle('active', state.soundEnabled);
             document.getElementById('timer-toggle').classList.toggle('active', state.timerEnabled);
-            
+
             // Hide settings panel on outside click
             document.addEventListener('click', (e) => {
                 const panel = document.getElementById('settings-panel');
                 const themeToggleBtn = document.querySelector('.theme-toggle');
                 const settingsBtn = document.getElementById('settings-button');
-                
+
                 const clickedInsidePanel = panel.contains(e.target);
                 const clickedThemeToggle = themeToggleBtn && themeToggleBtn.contains(e.target);
                 const clickedSettingsBtn = settingsBtn && settingsBtn.contains(e.target);
@@ -1782,6 +1946,13 @@
                     panel.classList.remove('active');
                 }
             });
+
+            const scorePanel = document.getElementById('score-panel');
+            if (scorePanel) {
+                scorePanel.addEventListener('animationend', () => {
+                    scorePanel.classList.remove('score-update');
+                });
+            }
         }
     };
 
@@ -1867,6 +2038,7 @@
             // Reset game state
             state.currentQuestionIndex = 0;
             state.score = { bireysel: 0, grup1: 0, grup2: 0 };
+            state.lastScoreSignature = '';
             state.answeredQuestions.clear();
             state.jokersUsed = { fiftyFifty: false, skip: false, time: false };
             
@@ -2081,6 +2253,7 @@
             
             state.answeredQuestions.add(state.currentQuestionIndex);
             this.updateProgressBar();
+            this.advanceTurnAfterQuestion();
         },
         
         checkFillInAnswer(selectedWord, question, draggedElement) {
@@ -2107,6 +2280,7 @@
 
                 state.answeredQuestions.add(state.currentQuestionIndex);
                 this.updateProgressBar();
+                this.advanceTurnAfterQuestion();
             } else {
                 // Yanlış: mesaj ve geri dönme etkisi
                 uiModule.playSound('incorrect');
@@ -2151,6 +2325,7 @@
                         state.answeredQuestions.add(state.currentQuestionIndex);
                         this.stopTimer();
                         this.updateProgressBar();
+                        this.advanceTurnAfterQuestion();
                     }
                 } else {
                     state.selectedMatchItem.classList.remove('selected');
@@ -2180,14 +2355,55 @@
             state.score[state.currentPlayer] += points;
             this.updateScoreBoard();
         },
-        
+
+        // Advance turn to next group after a question is completed
+        advanceTurnAfterQuestion() {
+            if (state.currentGameSettings.competitionMode !== 'grup') return;
+
+            state.currentPlayer = state.currentPlayer === 'grup1' ? 'grup2' : 'grup1';
+            this.updateScoreBoard();
+        },
+
         // Update score board
         updateScoreBoard() {
             const scoreBoard = document.getElementById('score-board');
-            if (state.currentGameSettings.competitionMode === 'grup') {
-                scoreBoard.innerText = `Grup 1: ${state.score.grup1} - Grup 2: ${state.score.grup2} | Sıra: ${state.currentPlayer === 'grup1' ? 'Grup 1' : 'Grup 2'}`;
+            const scoreHeading = document.getElementById('score-heading');
+            const scoreTurn = document.getElementById('score-turn');
+            const scorePanel = document.getElementById('score-panel');
+
+            if (!scoreBoard || !scorePanel) return;
+
+            const competitionMode = state.currentGameSettings.competitionMode;
+            let signature = '';
+
+            if (competitionMode === 'grup') {
+                if (scoreHeading) scoreHeading.textContent = 'Takım Skorları';
+                scoreBoard.innerHTML = `
+                    <div class="score-line"><span class="score-label">Grup 1</span><span class="score-number">${state.score.grup1}</span></div>
+                    <div class="score-line"><span class="score-label">Grup 2</span><span class="score-number">${state.score.grup2}</span></div>
+                `.trim();
+                signature = `grup-${state.score.grup1}-${state.score.grup2}`;
+                if (scoreTurn) {
+                    scoreTurn.textContent = `Sıra: ${state.currentPlayer === 'grup1' ? 'Grup 1' : 'Grup 2'}`;
+                    scoreTurn.style.display = 'block';
+                }
             } else {
-                scoreBoard.innerText = `Skor: ${state.score.bireysel}`;
+                if (scoreHeading) scoreHeading.textContent = 'Skor';
+                scoreBoard.innerHTML = `<div class="score-value-single">${state.score.bireysel}</div>`;
+                signature = `bireysel-${state.score.bireysel}`;
+                if (scoreTurn) {
+                    scoreTurn.textContent = '';
+                    scoreTurn.style.display = 'none';
+                }
+            }
+
+            const shouldAnimate = state.lastScoreSignature !== signature;
+            state.lastScoreSignature = signature;
+
+            if (shouldAnimate) {
+                scorePanel.classList.remove('score-update');
+                void scorePanel.offsetWidth;
+                scorePanel.classList.add('score-update');
             }
         },
         
@@ -2289,6 +2505,7 @@
                 }
 
                 uiModule.playSound('incorrect');
+                this.advanceTurnAfterQuestion();
             }
         },
         
@@ -2377,6 +2594,7 @@
             state.gameQuestions = [];
             state.currentQuestionIndex = 0;
             state.score = { bireysel: 0, grup1: 0, grup2: 0 };
+            state.lastScoreSignature = '';
             state.currentPlayer = 'bireysel';
             state.selectedMatchItem = null;
             state.matchedCount = 0;
@@ -2630,7 +2848,7 @@
         // Display filtered questions
         displayFilteredQuestions() {
             const container = document.getElementById('question-list-container');
-            // Arama filtresi aktifse filtrelenmiş soruları, değilse tüm soruları göster
+            // Herhangi bir filtre (arama, sınıf, zorluk veya tip) aktifse filtrelenmiş soruları, aksi halde tüm soruları göster
             const questionsToDisplay = (document.getElementById('question-search').value || document.getElementById('grade-filter').value || document.getElementById('difficulty-filter').value || document.getElementById('type-filter').value) 
                 ? state.filteredQuestions 
                 : allQuestions;
