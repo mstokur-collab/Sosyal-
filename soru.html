@@ -207,7 +207,7 @@
             transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
             box-shadow: var(--box-shadow);
         }
-        
+
         .btn:hover {
             transform: scale(1.05);
             background-color: #2563EB;
@@ -218,6 +218,17 @@
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
+        }
+
+        #start-screen {
+            position: relative;
+        }
+
+        .settings-button {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 1.2em;
         }
         
         .btn-secondary { 
@@ -1087,6 +1098,12 @@
                 left: 10px;
                 width: auto;
             }
+
+            .settings-button {
+                bottom: 15px;
+                left: 15px;
+                font-size: 1em;
+            }
         }
     </style>
 </head>
@@ -1115,8 +1132,8 @@
                 <button class="btn" onclick="uiModule.showScreen('player-name-screen')">🎮 Oyuna Başla</button>
                 <button class="btn btn-secondary" onclick="uiModule.showScreen('high-scores-screen')">🏆 Yüksek Skorlar</button>
                 <button class="btn btn-secondary" onclick="uiModule.showScreen('teacher-panel-screen')">👩‍🏫 Öğretmen Paneli</button>
-                <button id="settings-button" class="btn btn-warning" onclick="uiModule.toggleSettings()" style="font-size: 1.2em;">⚙️ Ayarlar</button>
             </div>
+            <button id="settings-button" class="btn btn-warning settings-button" onclick="uiModule.toggleSettings()">⚙️ Ayarlar</button>
             <div class="developer-section">
                 <h3>Program Geliştiricisi</h3>
                 <p>MUSTAFA OKUR</p>
