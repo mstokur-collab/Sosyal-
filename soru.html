@@ -1148,8 +1148,10 @@
             <button class="btn btn-back" onclick="uiModule.showScreen('player-name-screen')">← Geri</button>
             <h2>📚 Sınıfınızı Seçin</h2>
             <div class="button-grid">
+                <button class="btn" onclick="gameModule.selectGrade(5)">5. Sınıf</button>
                 <button class="btn" onclick="gameModule.selectGrade(6)">6. Sınıf</button>
                 <button class="btn" onclick="gameModule.selectGrade(7)">7. Sınıf</button>
+                <button class="btn" onclick="gameModule.selectGrade(8)">8. Sınıf</button>
             </div>
         </div>
         
@@ -1261,8 +1263,10 @@
                     <form id="teacher-panel-form" onsubmit="teacherPanelModule.saveQuestion(event)">
                         <label for="grade">🎓 Sınıf:</label>
                         <select id="grade" name="grade" required>
+                            <option value="5">5. Sınıf</option>
                             <option value="6">6. Sınıf</option>
                             <option value="7">7. Sınıf</option>
+                            <option value="8">8. Sınıf</option>
                         </select>
                         
                         <label for="topic">📚 Konu (Ünite):</label>
@@ -1327,6 +1331,15 @@
                         
                         <div class="sample-json">[
   {
+    "grade": 5,
+    "topic": "Birey ve Toplum",
+    "difficulty": "kolay",
+    "type": "quiz",
+    "question": "Türkiye'nin başkenti neresidir?",
+    "options": ["Ankara", "İstanbul", "İzmir", "Bursa"],
+    "answer": "Ankara"
+  },
+  {
     "grade": 6,
     "topic": "İlk Türk Devletleri",
     "difficulty": "kolay",
@@ -1338,22 +1351,22 @@
   {
     "grade": 7,
     "topic": "Osmanlı Devleti",
-    "difficulty": "orta", 
+    "difficulty": "orta",
     "type": "fill-in",
     "sentence": "Osmanlı Devleti ___ yılında kurulmuştur.",
     "answer": "1299",
     "distractors": ["1300", "1298", "1301"]
   },
   {
-    "grade": 6,
-    "topic": "İlk Türk Devletleri",
+    "grade": 8,
+    "topic": "Millî Mücadele",
     "difficulty": "zor",
     "type": "matching",
-    "question": "Liderleri ve devletlerini eşleştirin.",
+    "question": "Kongreleri bulundukları şehirlerle eşleştirin.",
     "pairs": [
-      {"term": "Bumin Kağan", "definition": "Göktürk Devleti"},
-      {"term": "Teoman", "definition": "Asya Hun Devleti"},
-      {"term": "Kutluk Bilge Kül Kağan", "definition": "Uygur Devleti"}
+      {"term": "Erzurum Kongresi", "definition": "Erzurum"},
+      {"term": "Sivas Kongresi", "definition": "Sivas"},
+      {"term": "Amasya Genelgesi", "definition": "Amasya"}
     ]
   }
 ]</div>
@@ -1385,12 +1398,20 @@
                             <div class="stat-label">Farklı Konu</div>
                         </div>
                         <div class="stat-card">
+                            <div class="stat-number" id="grade5-questions">0</div>
+                            <div class="stat-label">5. Sınıf Soruları</div>
+                        </div>
+                        <div class="stat-card">
                             <div class="stat-number" id="grade6-questions">0</div>
                             <div class="stat-label">6. Sınıf Soruları</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-number" id="grade7-questions">0</div>
                             <div class="stat-label">7. Sınıf Soruları</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="grade8-questions">0</div>
+                            <div class="stat-label">8. Sınıf Soruları</div>
                         </div>
                     </div>
 
@@ -1399,8 +1420,10 @@
                         <input type="search" id="question-search" class="search-input" placeholder="🔍 Soru ara..." oninput="teacherPanelModule.filterQuestions()">
                         <select id="grade-filter" class="filter-select" onchange="teacherPanelModule.filterQuestions()">
                             <option value="">Tüm Sınıflar</option>
+                            <option value="5">5. Sınıf</option>
                             <option value="6">6. Sınıf</option>
                             <option value="7">7. Sınıf</option>
+                            <option value="8">8. Sınıf</option>
                         </select>
                         <select id="difficulty-filter" class="filter-select" onchange="teacherPanelModule.filterQuestions()">
                             <option value="">Tüm Zorluklar</option>
@@ -1497,18 +1520,38 @@
             answer: "Çimpe", 
             distractors: ["Gelibolu", "Edirne", "Bursa"] 
         },
-        { 
-            id: 1663000000003, 
-            grade: 6, 
-            topic: "İlk Türk Devletleri", 
-            difficulty: "zor", 
-            type: "matching", 
-            question: "Liderleri ve devletlerini eşleştirin.", 
+        {
+            id: 1663000000003,
+            grade: 6,
+            topic: "İlk Türk Devletleri",
+            difficulty: "zor",
+            type: "matching",
+            question: "Liderleri ve devletlerini eşleştirin.",
             pairs: [
-                {term: "Bumin Kağan", definition: "Göktürk Devleti"}, 
-                {term: "Teoman", definition: "Asya Hun Devleti"}, 
+                {term: "Bumin Kağan", definition: "Göktürk Devleti"},
+                {term: "Teoman", definition: "Asya Hun Devleti"},
                 {term: "Kutluk Bilge Kül Kağan", definition: "Uygur Devleti"}
-            ] 
+            ]
+        },
+        {
+            id: 1663000000004,
+            grade: 5,
+            topic: "Birey ve Toplum",
+            difficulty: "kolay",
+            type: "quiz",
+            question: "Türkiye'nin başkenti neresidir?",
+            options: ["Ankara", "İstanbul", "İzmir", "Bursa"],
+            answer: "Ankara"
+        },
+        {
+            id: 1663000000005,
+            grade: 8,
+            topic: "Millî Mücadele",
+            difficulty: "orta",
+            type: "fill-in",
+            sentence: "Sakarya Meydan Muharebesi ___ yılında gerçekleşmiştir.",
+            answer: "1921",
+            distractors: ["1920", "1922", "1919"]
         },
     ];
 
@@ -2713,13 +2756,17 @@
         updateStatistics() {
             const totalQuestions = allQuestions.length;
             const totalTopics = [...new Set(allQuestions.map(q => q.topic))].length;
+            const grade5Questions = allQuestions.filter(q => q.grade === 5).length;
             const grade6Questions = allQuestions.filter(q => q.grade === 6).length;
             const grade7Questions = allQuestions.filter(q => q.grade === 7).length;
-            
+            const grade8Questions = allQuestions.filter(q => q.grade === 8).length;
+
             document.getElementById('total-questions').textContent = totalQuestions;
             document.getElementById('total-topics').textContent = totalTopics;
+            document.getElementById('grade5-questions').textContent = grade5Questions;
             document.getElementById('grade6-questions').textContent = grade6Questions;
             document.getElementById('grade7-questions').textContent = grade7Questions;
+            document.getElementById('grade8-questions').textContent = grade8Questions;
         },
         
         // Update topics datalist
@@ -2814,8 +2861,9 @@
                 if(hasError) return;
                 
                 // Grade validation
-                if (![6, 7].includes(parseInt(question.grade))) {
-                    errors.push(`Soru ${questionNum}: Sınıf 6 veya 7 olmalıdır.`);
+                const gradeValue = parseInt(question.grade);
+                if (![5, 6, 7, 8].includes(gradeValue)) {
+                    errors.push(`Soru ${questionNum}: Sınıf 5, 6, 7 veya 8 olmalıdır.`);
                     hasError = true;
                 }
                 
@@ -2945,6 +2993,15 @@
         loadSampleData() {
             const sampleData = [
                 {
+                    "grade": 5,
+                    "topic": "Birey ve Toplum",
+                    "difficulty": "kolay",
+                    "type": "quiz",
+                    "question": "Türkiye'nin başkenti neresidir?",
+                    "options": ["Ankara", "İstanbul", "İzmir", "Bursa"],
+                    "answer": "Ankara"
+                },
+                {
                     "grade": 6,
                     "topic": "İlk Türk Devletleri",
                     "difficulty": "kolay",
@@ -2963,15 +3020,15 @@
                     "distractors": ["1300", "1298", "1301"]
                 },
                 {
-                    "grade": 6,
-                    "topic": "İlk Türk Devletleri",
+                    "grade": 8,
+                    "topic": "Millî Mücadele",
                     "difficulty": "zor",
                     "type": "matching",
-                    "question": "Liderleri ve devletlerini eşleştirin.",
+                    "question": "Kongreleri bulundukları şehirlerle eşleştirin.",
                     "pairs": [
-                        {"term": "Bumin Kağan", "definition": "Göktürk Devleti"},
-                        {"term": "Teoman", "definition": "Asya Hun Devleti"},
-                        {"term": "Kutluk Bilge Kül Kağan", "definition": "Uygur Devleti"}
+                        {"term": "Erzurum Kongresi", "definition": "Erzurum"},
+                        {"term": "Sivas Kongresi", "definition": "Sivas"},
+                        {"term": "Amasya Genelgesi", "definition": "Amasya"}
                     ]
                 }
             ];
